@@ -3,83 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyWay Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Study Selection Pro</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background: #f0f2f5; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f0f2f5; color: #333; }
         .screen { height: 100vh; width: 100%; position: fixed; display: none; overflow-y: auto; }
         #login-screen { display: flex; background: #1e3a8a; justify-content: center; align-items: center; z-index: 100; }
-        .login-box { background: white; padding: 30px; border-radius: 20px; width: 90%; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; background: #1e3a8a; }
-        header { background: #1e3a8a; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
-        .card { background: white; margin: 15px; padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        iframe { width: 100%; height: 200px; border-radius: 10px; border: none; margin-top: 10px; background: #000; }
-    </style>
+        .login-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; outline: none; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; background: #1e3a8a; font-size: 16px; transition: 0.3s; }
+        header { background: #1e3a8a; color: white; padding: 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .card { background: white; margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        iframe { width: 100%; height: 210px; border-radius: 12px; border: none; margin-top: 15px; background: #000; }
+        .notice-bar { background: #fff9c4; padding: 12px; text-align: center; font-weight: bold; border-bottom: 2px solid #fbc02d; color: #856404; }
+        h3 { color: #1e3a8a; margin-bottom: 10px; }
+    </script>
 </head>
 <body>
+
     <div id="login-screen" class="screen" style="display: flex;">
         <div class="login-box">
-            <h2>StudyWay Pro</h2>
-            <input type="text" id="user-id" placeholder="Admin ID or Mobile Number">
+            <h2 style="color:#1e3a8a; font-size: 28px;">Study Selection</h2>
+            <p style="color:#666; margin: 10px 0 20px;">Apni Padhai, Apni Pehchan</p>
+            <input type="text" id="user-id" placeholder="ID or Mobile Number">
             <button onclick="login()" class="btn">Login</button>
         </div>
     </div>
 
     <div id="admin-screen" class="screen">
-        <header>Admin Panel <span onclick="logout()">Logout</span></header>
+        <header>Admin Panel <button onclick="logout()" style="background:none; border:1px solid white; color:white; padding:4px 8px; border-radius:5px;">Logout</button></header>
         <div class="card">
             <h3>📢 Post Notice</h3>
-            <input type="text" id="admin-note" placeholder="Enter notice">
-            <button onclick="saveData('note')" class="btn">Update Notice</button>
+            <input type="text" id="admin-note" placeholder="Write something for students...">
+            <button onclick="updateNotice()" class="btn">Update Notice</button>
         </div>
         <div class="card">
-            <h3>📹 Publish Video</h3>
-            <input type="text" id="v-name" placeholder="Topic">
+            <h3>📹 Upload Video Link</h3>
+            <input type="text" id="v-name" placeholder="Chapter Name">
             <input type="text" id="v-id" placeholder="YouTube Video ID (e.g. dQw4w9WgXcQ)">
-            <button onclick="saveData('video')" class="btn">Publish Now</button>
+            <button onclick="updateVideo()" class="btn">Publish Class</button>
         </div>
     </div>
 
     <div id="student-screen" class="screen">
-        <header>StudyWay <span onclick="logout()">Logout</span></header>
-        <div id="stu-notice" style="background:#ffeb3b; padding:10px; text-align:center; font-weight:bold;">Welcome Students!</div>
-        <div id="video-display"></div>
+        <header>Study Selection <button onclick="logout()" style="opacity:0.7; background:none; border:none; color:white;">Logout</button></header>
+        <div id="stu-notice" class="notice-bar">📢 Loading latest updates...</div>
+        <div id="video-display">
+            </div>
     </div>
 
     <script>
-        const ADMIN_ID = "admin123";
+        // FIREBASE CONFIGURATION
+        const firebaseConfig = {
+          apiKey: "AIzaSyAssYG20lFBlE6pHdVMZjuN", 
+          authDomain: "study-selection.firebaseapp.com",
+          databaseURL: "https://study-selection-default-rtdb.firebaseio.com",
+          projectId: "study-selection",
+          storageBucket: "study-selection.appspot.com",
+          messagingSenderId: "511233122426",
+          appId: "1:511233122426:web:7a4fb8e0df"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         function login() {
             const id = document.getElementById('user-id').value;
-            if(!id) return alert("Enter ID");
+            if(!id) return alert("Please enter something!");
             document.getElementById('login-screen').style.display = 'none';
-            if(id === ADMIN_ID) { document.getElementById('admin-screen').style.display = 'block'; } 
-            else { document.getElementById('student-screen').style.display = 'block'; loadData(); }
-        }
-        function saveData(type) {
-            if(type === 'note') { localStorage.setItem('appNotice', document.getElementById('admin-note').value); } 
-            else { 
-                localStorage.setItem('vTitle', document.getElementById('v-name').value); 
-                localStorage.setItem('vId', document.getElementById('v-id').value); 
-            }
-            alert("Data Saved!");
-        }
-        function loadData() {
-            const n = localStorage.getItem('appNotice');
-            const vt = localStorage.getItem('vTitle');
-            const vi = localStorage.getItem('vId');
-            if(n) document.getElementById('stu-notice').innerText = "📢 " + n;
-            if(vt && vi) {
-                document.getElementById('video-display').innerHTML = `
-                    <div class="card">
-                        <h4>${vt}</h4>
-                        <iframe src="https://www.youtube.com/embed/${vi}" allowfullscreen></iframe>
-                    </div>`;
+            if(id.toLowerCase() === "admin123") {
+                document.getElementById('admin-screen').style.display = 'block';
+            } else {
+                document.getElementById('student-screen').style.display = 'block';
+                startSync();
             }
         }
+
+        function updateNotice() {
+            const val = document.getElementById('admin-note').value;
+            db.ref('live/notice').set(val).then(() => alert("Notice Updated!"));
+        }
+
+        function updateVideo() {
+            const title = document.getElementById('v-name').value;
+            const vid = document.getElementById('v-id').value;
+            db.ref('live/video').set({ title: title, id: vid }).then(() => alert("Class Published!"));
+        }
+
+        function startSync() {
+            // Realtime Sync for Notice
+            db.ref('live/notice').on('value', (snap) => {
+                document.getElementById('stu-notice').innerText = "📢 " + (snap.val() || "Welcome to Study Selection!");
+            });
+            // Realtime Sync for Video
+            db.ref('live/video').on('value', (snap) => {
+                const data = snap.val();
+                if(data) {
+                    document.getElementById('video-display').innerHTML = `
+                        <div class="card">
+                            <h3>${data.title}</h3>
+                            <iframe src="https://www.youtube.com/embed/${data.id}" allowfullscreen></iframe>
+                        </div>`;
+                }
+            });
+        }
+
         function logout() { location.reload(); }
     </script>
 </body>
-  </html>
-  
+</html>
