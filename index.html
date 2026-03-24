@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Selection Ultra Pro</title>
+    <title>Study Selection Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -14,13 +14,13 @@
         .hidden { display: none !important; }
         .btn { padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 600; border: none; transition: 0.2s; }
         .btn-p { background: var(--accent); color: white; width: 100%; }
-        .input-d { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: var(--text); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
+        .input-d { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: var(--text); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; }
         .card { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Custom UI Components */
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 10px 25px; border-radius: 30px; z-index: 1000; display: none; box-shadow: 0 5px 20px rgba(0,0,0,0.4); font-weight: 600; }
-        .ticker-wrap { background: #dc2626; color: white; padding: 7px 0; overflow: hidden; white-space: nowrap; font-size: 11px; font-weight: 600; }
-        .ticker { display: inline-block; animation: ticker 30s linear infinite; }
+        /* UI Elements */
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 10px 25px; border-radius: 30px; z-index: 2000; display: none; font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        .ticker-wrap { background: #dc2626; color: white; padding: 7px 0; overflow: hidden; white-space: nowrap; font-size: 11px; }
+        .ticker { display: inline-block; animation: ticker 25s linear infinite; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         /* Navigation */
@@ -28,31 +28,229 @@
         .profile-icon { width: 45px; height: 45px; background: var(--card); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid #2a4066; color: var(--accent); font-weight: bold; }
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--card); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); z-index: 100; }
 
-        /* Exam Cards & Sections */
+        /* Exam Grid */
         .grid { padding: 0 20px; }
         .e-card { padding: 22px; border-radius: 20px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; }
-        .e-card:active { transform: scale(0.96); }
-        .sub-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 50; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
-        .s-header { padding: 40px 20px; border-radius: 25px; margin-bottom: 20px; background: var(--upsc); }
-        .s-card { background: var(--card); padding: 20px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; }
-        .s-num { width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--accent); font-weight: bold; }
+        .sub-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 500; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        .s-header { padding: 40px 20px; border-radius: 25px; margin-bottom: 20px; background: var(--upsc); color: white; }
+        .s-card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; }
+        .s-num { width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; justify-content: center; align-items: center; color: var(--accent); font-weight: bold; }
 
         /* Admin Layout */
-        .adm-nav { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; margin-bottom: 15px; }
-        .tab-btn { background: var(--card); color: var(--gray); padding: 8px 20px; border-radius: 20px; white-space: nowrap; font-size: 12px; cursor: pointer; }
+        .adm-tabs { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; }
+        .tab-btn { background: var(--card); color: var(--gray); padding: 8px 18px; border-radius: 20px; white-space: nowrap; font-size: 12px; cursor: pointer; }
         .tab-btn.active { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
 
-    <div id="toast">Update Success!</div>
-    <div class="ticker-wrap"><div class="ticker" id="live-ticker">Exam Updates: New material uploaded for UPSC & SSC. Best of luck for your exams!</div></div>
+    <div id="toast">Success!</div>
+    <div class="ticker-wrap"><div class="ticker" id="live-ticker">Exam Portal Active. Start your journey today!</div></div>
 
     <div id="login-screen">
-        <div class="card" style="width: 88%; max-width: 380px; text-align: center; padding: 40px;">
-            <h1 style="color:var(--accent); font-size: 28px;">Study Selection</h1>
-            <p style="color:var(--gray); margin-bottom: 30px;">Premium Learning Platform</p>
-            <input type="text" id="user-id" class="input-d" placeholder="Enter Full Name">
-            <button onclick="handleLogin()" class="btn btn-p" style="margin-top: 10px;">Login</button>
+        <div style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+            <div class="card" style="width: 85%; max-width: 380px; text-align: center; padding: 40px;">
+                <h1 style="color:var(--accent); margin-bottom: 5px;">Study Selection</h1>
+                <p style="color:var(--gray); margin-bottom: 25px;">Knowledge at your fingertips</p>
+                <input type="text" id="user-input" class="input-d" placeholder="Enter Name or Admin ID">
+                <button onclick="loginUser()" class="btn btn-p">Access Portal</button>
+            </div>
         </div>
     </div>
+
+    <div id="stu-screen" class="hidden" style="padding-bottom: 80px;">
+        <div id="dashboard-content">
+            <header>
+                <div><p style="font-size:12px; color:var(--gray);">WELCOME,</p><h2 id="greet-name">Student</h2></div>
+                <div class="profile-icon" id="user-init">S</div>
+            </header>
+
+            <div class="card" style="margin: 0 20px 20px 20px; border-left: 4px solid var(--accent);">
+                <h4 style="color:var(--accent)">Daily Quiz</h4>
+                <p style="font-size:13px; margin: 10px 0;">Which Article defines India as a Union of States?</p>
+                <button class="btn" onclick="showToast('✅ Correct Answer!')" style="background:rgba(255,255,255,0.05); color:white; font-size:11px;">Article 1</button>
+                <button class="btn" onclick="showToast('❌ Wrong! Try again')" style="background:rgba(255,255,255,0.05); color:white; font-size:11px; margin-left:10px;">Article 3</button>
+            </div>
+
+            <div style="padding: 0 20px 15px 20px;"><h3>Available Exams</h3></div>
+            <div id="stu-exam-list" class="grid"></div>
+            <div id="stu-broadcast" style="padding: 20px;"></div>
+        </div>
+
+        <div id="section-view" class="hidden sub-page">
+            <div onclick="closeSections()" style="margin-bottom:20px; color:var(--gray); cursor:pointer;">← Back to Dash</div>
+            <div id="section-render"></div>
+        </div>
+
+        <nav>
+            <div onclick="location.reload()" style="cursor:pointer; color:var(--accent);">🏠<br>Home</div>
+            <div onclick="logout()" style="cursor:pointer; color:var(--gray);">👤<br>Logout</div>
+        </nav>
+    </div>
+
+    <div id="adm-screen" class="hidden">
+        <header style="background:var(--card);">
+            <h2 style="color:var(--accent)">Admin Hub</h2>
+            <button onclick="logout()" style="color:red; background:none; border:none; font-weight:bold;">EXIT</button>
+        </header>
+
+        <div class="adm-tabs">
+            <div class="tab-btn active" onclick="switchTab('adm-exams')">🏗️ Exams Control</div>
+            <div class="tab-btn" onclick="switchTab('adm-live')">📢 Broadcast</div>
+            <div class="tab-btn" onclick="switchTab('adm-logs')">📊 Attendance</div>
+        </div>
+
+        <div id="adm-exams" class="adm-section" style="padding: 20px;">
+            <div class="card">
+                <h4>Add/Edit Exam</h4>
+                <input type="text" id="ex-n" class="input-d" placeholder="Exam Name">
+                <input type="text" id="ex-d" class="input-d" placeholder="Description">
+                <input type="text" id="ex-s" class="input-d" placeholder="Sections (comma separated)">
+                <button onclick="adminSaveExam()" class="btn btn-p">Save Exam</button>
+            </div>
+            <div id="adm-list-render"></div>
+        </div>
+
+        <div id="adm-live" class="adm-section hidden" style="padding: 20px;">
+            <div class="card">
+                <input type="text" id="bc-ticker" class="input-d" placeholder="Ticker News">
+                <button onclick="bcUpdate('ticker', document.getElementById('bc-ticker').value)" class="btn btn-p">Update Ticker</button>
+            </div>
+            <div class="card">
+                <input type="text" id="bc-title" class="input-d" placeholder="Video Title">
+                <input type="text" id="bc-vid" class="input-d" placeholder="YouTube ID">
+                <input type="text" id="bc-pdf" class="input-d" placeholder="PDF Link">
+                <button onclick="bcSaveFull()" class="btn btn-p">Publish Now</button>
+            </div>
+        </div>
+
+        <div id="adm-logs" class="adm-section hidden" style="padding: 20px;">
+            <div class="card" id="log-render" style="font-size:11px; max-height:450px; overflow-y:auto;">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyAssYG20lFBlE6pHdVMZjuN-7mN-K3Yx1M",
+          authDomain: "study-selection.firebaseapp.com",
+          databaseURL: "https://study-selection-default-rtdb.firebaseio.com",
+          projectId: "study-selection",
+          storageBucket: "study-selection.appspot.com",
+          messagingSenderId: "511233122426",
+          appId: "1:511233122426:web:7a4fb8e0df62f0f803f262"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function showToast(m) {
+            const t = document.getElementById('toast');
+            t.innerText = m; t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 2000);
+        }
+
+        // --- AUTH LOGIC ---
+        function loginUser() {
+            const val = document.getElementById('user-input').value.trim();
+            if(!val) return;
+            localStorage.setItem('sessionUser', val);
+            if(val.toLowerCase() !== 'admin123') {
+                db.ref('lifetime_logs/' + val.replace(/\s/g,'_')).push({ time: new Date().toLocaleString() });
+            }
+            location.reload();
+        }
+
+        window.onload = () => {
+            const user = localStorage.getItem('sessionUser');
+            if(!user) return;
+
+            document.getElementById('login-screen').classList.add('hidden');
+            if(user.toLowerCase() === 'admin123') {
+                document.getElementById('adm-screen').classList.remove('hidden');
+                loadAdmExams(); loadHistory();
+            } else {
+                document.getElementById('stu-screen').classList.remove('hidden');
+                document.getElementById('greet-name').innerText = user;
+                document.getElementById('user-init').innerText = user[0].toUpperCase();
+                initStudentView();
+            }
+        };
+
+        // --- EXAM LOGIC ---
+        const autoExams = {
+            "UPSC": {name:"UPSC", desc:"Civil Services (IAS, IPS)", sections:"Prelims, Mains, Interview"},
+            "SSC": {name:"SSC", desc:"CGL, CHSL, MTS Exams", sections:"Tier 1, Tier 2, Typing Test"},
+            "Railway": {name:"Railway", desc:"RRB NTPC, Group D", sections:"CBT 1, CBT 2, Verification"},
+            "Teaching": {name:"Teaching", desc:"CTET, KVS, UPTET", sections:"Paper 1, Paper 2"},
+            "UP Police": {name:"UP Police", desc:"Constable & SI Recruitment", sections:"Written, Physical, Medical"}
+        };
+
+        function initStudentView() {
+            db.ref('exams').on('value', s => {
+                const data = s.val();
+                if(!data) { db.ref('exams').set(autoExams); return; }
+                const container = document.getElementById('stu-exam-list');
+                container.innerHTML = '';
+                for(let k in data) {
+                    const ex = data[k];
+                    let grad = ex.name.includes('UPSC') ? 'var(--upsc)' : ex.name.includes('SSC') ? 'var(--ssc)' : 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
+                    container.innerHTML += `<div class="e-card" style="background:${grad}" onclick="viewSections('${k}')"><div><h3>${ex.name}</h3><p>${ex.desc}</p></div><div style="margin-left:auto">→</div></div>`;
+                }
+            });
+            syncBroadcast();
+        }
+
+        function viewSections(id) {
+            db.ref('exams/'+id).once('value', s => {
+                const ex = s.val();
+                document.getElementById('section-view').classList.remove('hidden');
+                let secs = ex.sections.split(',');
+                let html = `<div class="s-header"><h1>${ex.name}</h1><p>${ex.desc}</p></div><h3 style="margin:10px 20px">Stages</h3>`;
+                secs.forEach((v, i) => {
+                    html += `<div class="s-card"><div class="s-num">${i+1}</div><h3>${v.trim()}</h3></div>`;
+                });
+                document.getElementById('section-render').innerHTML = html;
+            });
+        }
+
+        function closeSections() { document.getElementById('section-view').classList.add('hidden'); }
+
+        // --- ADMIN FUNCTIONS ---
+        function adminSaveExam() {
+            const n = document.getElementById('ex-n').value;
+            const d = document.getElementById('ex-d').value;
+            const s = document.getElementById('ex-s').value;
+            if(!n) return;
+            db.ref('exams/'+n).set({name:n, desc:d, sections:s}).then(()=> { 
+                showToast("Exam Saved!");
+                document.getElementById('ex-n').value=''; document.getElementById('ex-d').value=''; document.getElementById('ex-s').value='';
+            });
+        }
+
+        function loadAdmExams() {
+            db.ref('exams').on('value', s => {
+                const list = document.getElementById('adm-list-render');
+                list.innerHTML = '<h4 style="margin:15px 0">Active Exams:</h4>';
+                s.forEach(c => {
+                    list.innerHTML += `<div class="card" style="margin-bottom:5px; padding:10px; display:flex; justify-content:space-between;"><span>${c.val().name}</span> <button onclick="delEx('${c.key}')" style="color:red; background:none; border:none;">Delete</button></div>`;
+                });
+            });
+        }
+
+        function delEx(k) { if(confirm("Delete?")) db.ref('exams/'+k).remove(); }
+
+        function bcSaveFull() {
+            const t = document.getElementById('bc-title').value;
+            const v = document.getElementById('bc-vid').value;
+            const p = document.getElementById('bc-pdf').value;
+            db.ref('broadcast').set({title:t, vid:v, pdf:p}).then(()=>showToast("Published!"));
+        }
+
+        function bcUpdate(k, v) { db.ref('broadcast/'+k).set(v).then(()=>showToast("Updated!")); }
+
+        function syncBroadcast() {
+            db.ref('broadcast').on('value', s => {
+                const d = s.val(); if(!d) return;
+                if(d.ticker) document.getElementById('live-ticker').innerText = d.ticker;
+                let html = '';
+                if(d.vid) html += `<h3>Today's Special</h3><div class="card"><h4>${d.title}</h4><iframe width="100%" height="200" src="https://www.youtube.com/embed/${d.vid}" frameborder="0" allowfullscreen style="border-radius:20px; margin-top:10px; border:none;"></iframe></div>`;
+                if(d.pdf) html
