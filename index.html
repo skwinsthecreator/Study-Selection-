@@ -3,85 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Selection Pro</title>
+    <title>Study Selection Pro - Ultimate Edition</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 🚫 APPSGEYSER AD BLOCKER */
-        iframe, ins, .appgeyser-ad-unit, [id*="ads"], a[href*="appsgeyser"] {
-            display: none !important; height: 0 !important; visibility: hidden !important;
+        /* 🚫 AGGRESSIVE AD-SHIELD */
+        iframe, ins, .appgeyser-ad-unit, [id*="ads"], a[href*="appsgeyser"], .footer-banner {
+            display: none !important; height: 0 !important; visibility: hidden !important; position: absolute !important; top: -1000px !important;
         }
 
-        :root { --bg: #0a0e17; --card-blue: #1d4ed8; --card-purple: #7c3aed; --card-green: #059669; --text-white: #ffffff; }
+        :root { --bg: #0a0e17; --primary: #2563eb; --purple: #7c3aed; --green: #10b981; --orange: #f97316; --text: #ffffff; --card-bg: #161b26; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text-white); }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        .header-top { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 0 20px; margin-bottom: 30px; }
-        .stat-box { background: #161b26; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #2d3748; }
-        .stat-box h3 { font-size: 18px; color: var(--text-white); }
-        .stat-box p { font-size: 11px; color: #a0aec0; }
-
-        .section-title { padding: 0 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .exam-list { padding: 0 20px 100px 20px; }
+        /* UI Elements */
+        .header { padding: 30px 20px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 0 20px; margin-bottom: 25px; }
+        .stat-card { background: var(--card-bg); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid #2d3748; }
         
-        /* Professional Cards (Image 1000005429 Style) */
-        .exam-card { border-radius: 25px; padding: 25px; margin-bottom: 20px; position: relative; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
-        .blue-card { background: linear-gradient(135deg, #2563eb, #1e40af); }
-        .purple-card { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-        .green-card { background: linear-gradient(135deg, #10b981, #047857); }
+        .exam-card { border-radius: 25px; padding: 25px; margin: 0 20px 20px 20px; position: relative; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .exam-card:active { transform: scale(0.96); }
+        .tag-post { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 12px; font-size: 10px; }
         
-        .post-tag { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 11px; }
-        .exam-name { font-size: 24px; font-weight: 700; margin: 10px 0; }
-        .exam-desc { font-size: 13px; opacity: 0.8; margin-bottom: 15px; }
-        .exam-footer { font-size: 12px; display: flex; align-items: center; gap: 10px; }
+        /* Profile & Forms */
+        .page { display: none; padding-bottom: 100px; }
+        .active-page { display: block; }
+        .input-box { width: 100%; padding: 16px; background: #1f2937; border: 1px solid #374151; border-radius: 12px; color: white; margin-bottom: 15px; outline: none; }
+        .btn-main { background: var(--orange); color: white; padding: 16px; border-radius: 12px; border: none; width: 100%; font-weight: 700; cursor: pointer; }
 
-        /* Overlay View (Image 1000005430 & 5431 Style) */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; display: none; }
-        .sub-header { padding: 40px 20px; border-radius: 0 0 30px 30px; }
-        .section-box { background: #161b26; margin: 15px 20px; padding: 20px; border-radius: 20px; border-left: 5px solid; display: flex; justify-content: space-between; align-items: center; }
-        .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-        .tag { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; font-size: 10px; border: 1px solid rgba(255,255,255,0.2); }
+        /* Navigation */
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #111827; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1f2937; z-index: 1000; }
+        .nav-item { text-align: center; color: #6b7280; font-size: 11px; cursor: pointer; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
 
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #111827; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1f2937; }
-        .hidden { display: none !important; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; display: none; padding-bottom: 100px; }
+        .section-item { background: var(--card-bg); margin: 12px 20px; padding: 18px; border-radius: 15px; border-left: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
-    <div id="view-home">
-        <div class="header-top">
-            <div><p style="color:#a0aec0; font-size:12px;">NAMASTE</p><h1 id="user-display">Prakash</h1></div>
-            <div style="font-size: 24px;">🔍</div>
+    <div id="page-home" class="page active-page">
+        <div class="header">
+            <p style="color:#94a3b8; font-size:12px;">NAMASTE</p>
+            <h1 id="greet-name">Student</h1>
         </div>
-
-        <div class="stats-row">
-            <div class="stat-box"><h3>5</h3><p>Exams</p></div>
-            <div class="stat-box"><h3>22</h3><p>Sections</p></div>
-            <div class="stat-box"><h3>80+</h3><p>Subjects</p></div>
+        <div class="stats-grid">
+            <div class="stat-card"><h3 id="count-ex">8</h3><p style="font-size:10px; color:#94a3b8;">Exams</p></div>
+            <div class="stat-card"><h3 id="count-sec">35</h3><p style="font-size:10px; color:#94a3b8;">Sections</p></div>
+            <div class="stat-card"><h3>100+</h3><p style="font-size:10px; color:#94a3b8;">Subjects</p></div>
         </div>
+        <div id="render-exams"></div>
+    </div>
 
-        <div class="section-title"><h2>All Exams</h2> <span style="color:orange; font-size:12px;">● 2026-27</span></div>
-        
-        <div class="exam-list" id="render-main">
-            </div>
+    <div id="page-bookmarks" class="page" style="padding:20px;">
+        <h2>My Saved Articles</h2>
+        <div id="render-saved" style="margin-top:20px; color:#94a3b8; text-align:center;">No bookmarks yet.</div>
+    </div>
+
+    <div id="page-profile" class="page" style="padding:20px;">
+        <h2>Student Profile</h2>
+        <div class="stat-card" style="margin:20px 0; text-align:left;">
+            <p><strong>Name:</strong> <span id="prof-name"></span></p>
+            <p><strong>Status:</strong> Active Student</p>
+        </div>
+        <div style="background:var(--card-bg); padding:20px; border-radius:20px;">
+            <p style="margin-bottom:15px; font-weight:600;">Update Details (Sync with Admin)</p>
+            <input type="text" id="up-phone" class="input-box" placeholder="Phone Number">
+            <input type="text" id="up-target" class="input-box" placeholder="Target Exam (e.g. SSC CGL)">
+            <button onclick="syncProfile()" class="btn-main">SAVE & SYNC</button>
+        </div>
+        <button onclick="logout()" style="background:none; border:1px solid red; color:red; margin-top:20px;" class="btn-main">LOGOUT ACCOUNT</button>
+    </div>
+
+    <div id="page-admin" class="page" style="padding:20px;">
+        <h2 style="color:var(--orange);">Admin Dashboard</h2>
+        <div class="stat-card" style="margin-top:20px;">
+            <input type="text" id="adm-name" class="input-box" placeholder="Exam Name">
+            <input type="text" id="adm-parent" class="input-box" placeholder="Parent (e.g. SSC)">
+            <input type="text" id="adm-stages" class="input-box" placeholder="Stages (Tier 1, Tier 2)">
+            <button onclick="adminPush()" class="btn-main">ADD EXAM</button>
+        </div>
+        <div id="adm-sync-list"></div>
     </div>
 
     <div id="view-detail" class="overlay">
-        <div class="sub-header" id="overlay-head">
-            <div onclick="closeDetail()" style="font-size:25px; margin-bottom:20px;">←</div>
-            <h1 id="det-title">UPSC</h1>
-            <p id="det-full-name" style="opacity:0.8;"></p>
+        <div id="detail-header" style="padding:40px 20px; border-radius:0 0 30px 30px;">
+            <div onclick="closeDetail()" style="font-size:25px; margin-bottom:15px; cursor:pointer;">← BACK</div>
+            <h1 id="det-title">Exam</h1>
+            <p id="det-sub" style="opacity:0.7; font-size:13px;"></p>
         </div>
-        <h3 style="padding: 20px 20px 10px 20px;">Exam Sections</h3>
-        <div id="render-sections"></div>
+        <div id="render-sub-sections" style="margin-top:20px;"></div>
     </div>
 
     <nav>
-        <div onclick="location.reload()" style="text-align:center;">🏠<br><small>Home</small></div>
-        <div style="text-align:center; color:#6b7280;">🔖<br><small>Bookmarks</small></div>
-        <div onclick="logout()" style="text-align:center; color:#6b7280;">👤<br><small>Profile</small></div>
+        <div class="nav-item active" onclick="switchPage('home')">🏠<br>Home</div>
+        <div class="nav-item" onclick="switchPage('bookmarks')">🔖<br>Bookmarks</div>
+        <div class="nav-item" onclick="switchPage('profile')">👤<br>Profile</div>
     </nav>
 
     <script>
@@ -97,90 +115,89 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 🏗️ DATA STRUCTURE (As per Image 1000005430/31)
-        const masterData = {
-            "UPSC": {
-                name: "UPSC", fullName: "Union Public Service Commission", 
-                desc: "Civil Services, IAS, IPS, IFS and more", posts: "1200+ Posts", color: "blue-card",
-                sections: [
-                    { title: "Prelims", sub: "Preliminary Examination", tags: ["GS Paper I", "CSAT Paper II"] },
-                    { title: "Mains", sub: "Main Examination (Written)", tags: ["Essay", "GS Paper I", "GS Paper II", "Optional I"] },
-                    { title: "Interview", sub: "Personality Test / Interview", tags: ["Personality Test"] }
-                ]
-            },
-            "SSC": {
-                name: "SSC", fullName: "Staff Selection Commission", 
-                desc: "CGL, CHSL, MTS, GD, CPO and more", posts: "10000+ Posts", color: "purple-card",
-                sections: [
-                    { title: "SSC CGL", sub: "Combined Graduate Level", tags: ["Tier I", "Tier II"] },
-                    { title: "SSC CHSL", sub: "Combined Higher Secondary Level", tags: ["Tier I", "Tier II"] },
-                    { title: "SSC MTS", sub: "Multi Tasking Staff", tags: ["Session I", "Session II"] }
-                ]
-            },
-            "Railway": {
-                name: "Railway", fullName: "Railway Recruitment Board", 
-                desc: "NTPC, Group D, ALP, RPF and more", posts: "15000+ Posts", color: "green-card",
-                sections: [
-                    { title: "CBT 1", sub: "Common Test", tags: ["Maths", "Reasoning", "GA"] },
-                    { title: "CBT 2", sub: "Stage 2 Exam", tags: ["Technical", "General Science"] }
-                ]
-            }
+        // 🛡️ AD-KILLER ENGINE
+        setInterval(() => {
+            document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, a[href*="appsgeyser"]').forEach(el => el.remove());
+        }, 100);
+
+        // 🏗️ EXPANDED EXAM DATA
+        const fullExams = {
+            "UPSC": { name: "UPSC", full: "Union Public Service Commission", posts: "1200+", col: "linear-gradient(135deg, #2563eb, #1e40af)", stages: "Prelims, Mains, Interview" },
+            "SSC CGL": { name: "SSC CGL", full: "Combined Graduate Level", posts: "8000+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "Tier I, Tier II" },
+            "SSC CHSL": { name: "SSC CHSL", full: "10+2 Level Exam", posts: "4500+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "Tier I, Tier II" },
+            "Banking": { name: "Banking", full: "SBI & IBPS PO/Clerk", posts: "12000+", col: "linear-gradient(135deg, #059669, #065f46)", stages: "Prelims, Mains" },
+            "Railway": { name: "Railway", full: "NTPC & Group D", posts: "20000+", col: "linear-gradient(135deg, #f59e0b, #b45309)", stages: "CBT 1, CBT 2" },
+            "Defence": { name: "Defence", full: "NDA, CDS, AFCAT", posts: "1000+", col: "linear-gradient(135deg, #dc2626, #991b1b)", stages: "Written, SSB Interview" },
+            "SSC GD": { name: "SSC GD", full: "Constable GD Exam", posts: "26000+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "CBE, PET/PST" },
+            "SSC CPO": { name: "SSC CPO", full: "SI in Delhi Police", posts: "4000+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "Paper 1, PET, Paper 2" }
         };
 
-        function renderDashboard() {
-            const list = document.getElementById('render-main');
-            list.innerHTML = '';
-            for(let key in masterData) {
-                const ex = masterData[key];
-                list.innerHTML += `
-                    <div class="exam-card ${ex.color}" onclick="openDetail('${key}')">
-                        <div class="post-tag">${ex.posts}</div>
-                        <div class="exam-name">${ex.name}</div>
-                        <p class="exam-desc">${ex.desc}</p>
-                        <div class="exam-footer">📚 ${ex.sections.length} Sections <span>➔</span></div>
-                    </div>`;
-            }
+        function switchPage(p) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
+            document.getElementById('page-'+p).classList.add('active-page');
+            event.currentTarget.classList.add('active');
         }
 
-        function openDetail(key) {
-            const ex = masterData[key];
+        window.onload = () => {
+            const user = localStorage.getItem('study_user');
+            if(!user) {
+                const n = prompt("Enter your name to login:");
+                if(n) { localStorage.setItem('study_user', n); location.reload(); }
+            }
+            document.getElementById('greet-name').innerText = user;
+            document.getElementById('prof-name').innerText = user;
+            
+            if(user === 'admin123') switchPage('admin');
+            renderHome();
+        };
+
+        function renderHome() {
+            const container = document.getElementById('render-exams');
+            container.innerHTML = '';
+            let count = 0;
+            for(let k in fullExams) {
+                count++;
+                const ex = fullExams[k];
+                container.innerHTML += `
+                    <div class="exam-card" style="background:${ex.col}" onclick="openDetail('${k}')">
+                        <div class="tag-post">${ex.posts} Posts</div>
+                        <h2 style="font-size:22px;">${ex.name}</h2>
+                        <p style="font-size:12px; opacity:0.8;">${ex.full}</p>
+                        <div style="margin-top:15px; font-size:11px;">📚 ${ex.stages.split(',').length} Sections ➔</div>
+                    </div>`;
+            }
+            document.getElementById('count-ex').innerText = count;
+        }
+
+        function openDetail(id) {
+            const ex = fullExams[id];
             const overlay = document.getElementById('view-detail');
-            const head = document.getElementById('overlay-head');
-            
-            // Set Color Theme
-            head.className = `sub-header ${ex.color}`;
+            document.getElementById('detail-header').style.background = ex.col;
             document.getElementById('det-title').innerText = ex.name;
-            document.getElementById('det-full-name').innerText = ex.fullName;
+            document.getElementById('det-sub').innerText = ex.full;
             
-            const render = document.getElementById('render-sections');
+            const render = document.getElementById('render-sub-sections');
             render.innerHTML = '';
-            ex.sections.forEach((s, index) => {
-                let tagsHtml = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+            ex.stages.split(',').forEach((s, i) => {
                 render.innerHTML += `
-                    <div class="section-box" style="border-color: ${ex.color.includes('blue') ? '#2563eb' : '#8b5cf6'}">
-                        <div>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <span style="background:#2d3748; padding:2px 8px; border-radius:5px; font-size:12px;">${index+1}</span>
-                                <div><strong>${s.title}</strong><br><small style="color:#a0aec0">${s.sub}</small></div>
-                            </div>
-                            <div class="tag-row">${tagsHtml}</div>
-                        </div>
-                        <div style="color:#4a5568">➔</div>
+                    <div class="section-item">
+                        <div><small style="color:#94a3b8">Section ${i+1}</small><br><strong>${s.trim()}</strong></div>
+                        <div style="color:var(--orange)">START ➔</div>
                     </div>`;
             });
             overlay.style.display = 'block';
         }
 
-        function closeDetail() { document.getElementById('view-detail').style.display = 'none'; }
-        
-        window.onload = () => {
-            const user = localStorage.getItem('study_user') || 'Prakash';
-            document.getElementById('user-display').innerText = user;
-            renderDashboard();
-            // Auto-Sync to Firebase for Admin reference
-            db.ref('master_exams_v2').set(masterData);
-        };
+        function syncProfile() {
+            const user = localStorage.getItem('study_user');
+            const phone = document.getElementById('up-phone').value;
+            const target = document.getElementById('up-target').value;
+            db.ref('students/' + user.replace(/\s/g,'_')).update({ phone, target, last_sync: new Date().toLocaleString() });
+            alert("Profile Synced with Admin Database!");
+        }
 
+        function closeDetail() { document.getElementById('view-detail').style.display = 'none'; }
         function logout() { localStorage.removeItem('study_user'); location.reload(); }
     </script>
 </body>
