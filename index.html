@@ -3,101 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Selection Pro</title>
+    <title>Study Selection - Professional Academy</title>
+    
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* 🚫 THE ULTIMATE AD-VANISHER (Aggressive) */
+        /* =========================================
+           🚫 AGGRESSIVE AD-BLOCKER SYSTEM 
+           ========================================= */
         iframe, ins, .appgeyser-ad-unit, [id*="ads"], [class*="ads"], 
-        div[style*="z-index: 2147483647"], div[id*="p_"], a[href*="appsgeyser"] {
+        [id*="p_"], div[style*="z-index: 2147483647"], div[style*="fixed"],
+        script[src*="appsgeyser"], a[href*="appsgeyser"] {
             display: none !important;
-            height: 0 !important;
-            width: 0 !important;
             visibility: hidden !important;
             opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
             position: absolute !important;
             top: -5000px !important;
+            left: -5000px !important;
             pointer-events: none !important;
+            z-index: -999 !important;
         }
 
-        :root { --primary: #002e6e; --secondary: #f97316; --bg: #f0f4f8; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: #333; overflow-x: hidden; height: 100vh; }
-        
-        .header { background: var(--primary); color: white; padding: 30px 20px; border-radius: 0 0 25px 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        .card { background: white; padding: 18px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        
-        /* Professional Exam List Style */
-        .exam-item { 
-            background: white; padding: 20px; border-radius: 15px; margin-bottom: 12px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border-left: 6px solid var(--secondary); cursor: pointer; font-weight: 600;
-            transition: 0.2s;
+        /* =========================================
+           🎨 PROFESSIONAL UI DESIGN (CareerWill)
+           ========================================= */
+        :root {
+            --primary: #002e6e;
+            --secondary: #f97316;
+            --bg: #f4f7fa;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
-        .exam-item:active { background: #e8eef3; transform: scale(0.98); }
 
-        .btn-p { background: var(--secondary); color: white; padding: 16px; border-radius: 12px; border: none; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer; }
-        .input-d { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #ddd; margin-bottom: 15px; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body { background: var(--bg); color: var(--text-dark); overflow-x: hidden; min-height: 100vh; }
+
+        /* Login Styling */
+        .login-container { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 25px; background: var(--primary); }
+        .login-card { background: var(--white); width: 100%; max-width: 400px; padding: 45px 30px; border-radius: 25px; box-shadow: var(--shadow); text-align: center; }
+        .login-card h2 { color: var(--primary); font-size: 28px; margin-bottom: 10px; font-weight: 700; }
         
-        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 99999; }
+        /* Header Styling */
+        .app-header { background: var(--primary); color: var(--white); padding: 40px 20px 30px 20px; border-radius: 0 0 35px 35px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 25px; }
+        .app-header p { font-size: 14px; opacity: 0.8; font-weight: 300; text-transform: uppercase; letter-spacing: 1px; }
+        .app-header h2 { font-size: 24px; font-weight: 600; }
+
+        /* Dashboard Items */
+        .content-area { padding: 0 20px 100px 20px; }
+        .section-title { font-size: 16px; font-weight: 600; color: var(--text-light); margin-bottom: 15px; display: block; }
+        
+        .exam-card { 
+            background: var(--white); padding: 22px; border-radius: 18px; margin-bottom: 15px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-left: 6px solid var(--secondary); box-shadow: var(--shadow);
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .exam-card:active { transform: scale(0.96); background: #f8fafc; }
+        .exam-card span { font-size: 17px; font-weight: 600; color: var(--primary); }
+        .exam-card i { color: var(--secondary); font-weight: bold; font-size: 20px; }
+
+        /* Forms & Buttons */
+        .input-group { width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid #e2e8f0; margin-bottom: 15px; outline: none; font-size: 15px; transition: 0.3s; }
+        .input-group:focus { border-color: var(--secondary); }
+        .btn-action { background: var(--secondary); color: var(--white); padding: 16px; border-radius: 14px; border: none; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3); }
+
+        /* Admin Layout */
+        .admin-card { background: var(--white); padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .log-item { padding: 10px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+
+        /* Navigation */
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--white); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e2e8f0; z-index: 1000; }
+        .nav-item { text-align: center; color: var(--text-light); font-size: 12px; cursor: pointer; }
+        .nav-item.active { color: var(--primary); font-weight: 700; }
+
         .hidden { display: none !important; }
-        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 10000; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
+        .page-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
     </style>
 </head>
 <body>
 
-    <div id="view-login" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--primary);">
-        <div class="card" style="width: 100%; max-width: 380px; text-align: center; padding: 40px 20px;">
-            <h1 style="color:var(--primary); margin-bottom: 10px;">STUDY SELECTION</h1>
-            <p style="color:#666; margin-bottom: 30px;">Login to Your Classroom</p>
-            <input type="text" id="user-name" class="input-d" placeholder="Student Name">
-            <button onclick="handleLogin()" class="btn-p">LOGIN NOW</button>
+    <div id="view-login" class="login-container">
+        <div class="login-card">
+            <h2>PRO ACADEMY</h2>
+            <p style="color: #64748b; margin-bottom: 30px;">Study Selection Portal</p>
+            <input type="text" id="user-input" class="input-group" placeholder="Enter Your Full Name">
+            <button onclick="handleUserAuth()" class="btn-action">LOGIN TO DASHBOARD</button>
         </div>
     </div>
 
-    <div id="view-student" class="hidden">
-        <div class="header">
-            <p style="font-size: 14px; opacity: 0.8;">Welcome Back,</p>
-            <h2 id="display-name">Student</h2>
+    <div id="view-dashboard" class="hidden">
+        <div class="app-header">
+            <p>Welcome Back,</p>
+            <h2 id="user-display">Student</h2>
         </div>
-        <div style="padding: 20px;">
-            <h4 style="margin-bottom: 15px; color: #555;">Select Your Course</h4>
-            <div id="exam-render">
+        <div class="content-area">
+            <span class="section-title">Explore Your Courses</span>
+            <div id="exam-container">
                 </div>
         </div>
         <nav>
-            <div onclick="location.reload()" style="text-align:center; color:var(--primary); font-weight:bold; cursor:pointer;">🏠<br>Home</div>
-            <div onclick="doLogout()" style="text-align:center; color:#888; cursor:pointer;">👤<br>Logout</div>
+            <div class="nav-item active" onclick="location.reload()">🏠<br>Home</div>
+            <div class="nav-item" onclick="showAttendance()">📅<br>History</div>
+            <div class="nav-item" onclick="processLogout()">👤<br>Logout</div>
         </nav>
     </div>
 
-    <div id="view-admin" class="hidden" style="padding: 20px;">
-        <div class="header" style="border-radius: 15px; padding: 15px; display:flex; justify-content:space-between; align-items:center;">
-            <h3>Admin Panel</h3>
-            <button onclick="doLogout()" style="color:white; background:none; border:none; font-weight:bold;">EXIT</button>
+    <div id="view-admin" class="hidden" style="padding: 20px; padding-bottom: 100px;">
+        <div class="app-header" style="border-radius: 20px; padding: 25px; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 20px;">Admin Panel</h2>
+            <button onclick="processLogout()" style="background: none; border: none; color: white; font-weight: bold;">Logout</button>
         </div>
-        <div class="card" style="margin-top:20px;">
-            <h4>Manage Exams Tree</h4>
-            <input type="text" id="in-name" class="input-d" placeholder="Name (e.g. CGL)">
-            <input type="text" id="in-parent" class="input-d" placeholder="Parent (e.g. SSC) - Main ke liye khali">
-            <input type="text" id="in-secs" class="input-d" placeholder="Stages (Tier 1, Tier 2)">
-            <button onclick="adminSave()" class="btn-p">SAVE & SYNC</button>
+
+        <div class="admin-card">
+            <h4 style="margin-bottom: 15px; color: var(--primary);">Add/Edit Exam Data</h4>
+            <input type="text" id="adm-name" class="input-group" placeholder="Exam Name (e.g. SSC CGL)">
+            <input type="text" id="adm-parent" class="input-group" placeholder="Parent Category (e.g. SSC) - Optional">
+            <input type="text" id="adm-stages" class="input-group" placeholder="Stages (e.g. Prelims, Mains, Interview)">
+            <button onclick="syncDataToFirebase()" class="btn-action">SAVE CATEGORY</button>
         </div>
-        <div id="adm-list"></div>
-        <div class="card">
-            <h4>Live Students Activity</h4>
-            <div id="adm-logs" style="font-size: 12px; color: #555;"></div>
+
+        <div id="admin-exam-list">
+            </div>
+
+        <div class="admin-card">
+            <h4 style="margin-bottom: 10px; color: var(--primary);">Live Student Logs</h4>
+            <div id="log-render" style="max-height: 250px; overflow-y: auto;"></div>
         </div>
     </div>
 
-    <div id="view-sub" class="hidden full-page">
-        <div onclick="this.parentElement.classList.add('hidden')" style="color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;">← BACK</div>
-        <h2 id="sub-title" style="margin-bottom:20px; color:var(--primary);"></h2>
-        <div id="sub-render"></div>
+    <div id="view-nested" class="hidden page-overlay">
+        <div onclick="this.parentElement.classList.add('hidden')" style="color: var(--primary); font-weight: 700; margin-bottom: 20px; cursor: pointer;">← BACK TO HOME</div>
+        <h2 id="nested-title" style="margin-bottom: 20px; border-left: 5px solid var(--secondary); padding-left: 12px; color: var(--primary);"></h2>
+        <div id="nested-render"></div>
     </div>
 
     <script>
+        // FIREBASE INITIALIZATION
         const firebaseConfig = {
           apiKey: "AIzaSyAssYG20lFBlE6pHdVMZjuN-7mN-K3Yx1M",
           authDomain: "study-selection.firebaseapp.com",
@@ -108,121 +157,152 @@
           appId: "1:511233122426:web:7a4fb8e0df62f0f803f262"
         };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const database = firebase.database();
 
-        // 🛡️ AD-SHIELD ENGINE (Non-Stop Cleaning)
-        setInterval(() => {
-            const elements = document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, [id*="ads"], div[style*="fixed"]');
-            elements.forEach(el => {
-                if(!el.id.includes('view-') && !el.classList.contains('full-page')) {
+        // 🛡️ AD-KILLER ENGINE (Nuclear Mode)
+        function cleanAds() {
+            const forbidden = document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, [id*="ads"], div[style*="fixed"]');
+            forbidden.forEach(el => {
+                if(!el.id.includes('view-') && !el.classList.contains('page-overlay')) {
                     el.remove();
                 }
             });
-        }, 50);
+        }
+        setInterval(cleanAds, 100);
 
-        function handleLogin() {
-            const name = document.getElementById('user-name').value.trim();
-            if(!name) return;
-            if(name.toLowerCase() !== 'admin123') {
-                db.ref('attendance/' + name.replace(/\s/g,'_')).push({ time: new Date().toLocaleString() });
+        // AUTHENTICATION LOGIC
+        function handleUserAuth() {
+            const val = document.getElementById('user-input').value.trim();
+            if(!val) return alert("Please enter your name!");
+            
+            if(val.toLowerCase() !== 'admin123') {
+                database.ref('attendance_logs/' + val.replace(/\s/g,'_')).push({
+                    timestamp: new Date().toLocaleString(),
+                    device: navigator.userAgent.substring(0, 50)
+                });
             }
-            localStorage.setItem('currentUser', name);
+            localStorage.setItem('pro_auth_user', val);
             location.reload();
         }
 
         window.onload = () => {
-            const user = localStorage.getItem('currentUser');
-            if(!user) return;
+            const activeUser = localStorage.getItem('pro_auth_user');
+            if(!activeUser) return;
+
             document.getElementById('view-login').classList.add('hidden');
-            if(user.toLowerCase() === 'admin123') {
+            if(activeUser.toLowerCase() === 'admin123') {
                 document.getElementById('view-admin').classList.remove('hidden');
-                loadAdmin();
+                runAdminModule();
             } else {
-                document.getElementById('view-student').classList.remove('hidden');
-                document.getElementById('display-name').innerText = user;
-                loadStudentExams();
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                document.getElementById('user-display').innerText = activeUser;
+                runStudentModule();
             }
         };
 
-        function loadStudentExams() {
-            db.ref('exams').on('value', s => {
-                const data = s.val() || { "SSC": {name:"SSC"}, "UPSC": {name:"UPSC"} };
-                const container = document.getElementById('exam-render');
+        // STUDENT DASHBOARD MODULE
+        function runStudentModule() {
+            database.ref('master_exams').on('value', snapshot => {
+                const data = snapshot.val() || {
+                    "SSC": {name: "SSC Exams", parent: ""},
+                    "UPSC": {name: "UPSC Civil Services", parent: ""},
+                    "Banking": {name: "Banking & Insurance", parent: ""},
+                    "Railway": {name: "Railway Recruitment", parent: ""},
+                    "Defence": {name: "Defence Forces", parent: ""}
+                };
+                const container = document.getElementById('exam-container');
                 container.innerHTML = '';
-                for(let k in data) {
-                    if(!data[k].parent) {
-                        container.innerHTML += `<div class="exam-item" onclick="openLevel('${k}')"><span>${data[k].name}</span> <span>➔</span></div>`;
+                
+                for(let key in data) {
+                    if(!data[key].parent) {
+                        const card = document.createElement('div');
+                        card.className = 'exam-card';
+                        card.innerHTML = `<span>${data[key].name}</span> <i>➔</i>`;
+                        card.onclick = () => showSubCategories(key);
+                        container.appendChild(card);
                     }
                 }
             });
         }
 
-        function openLevel(id) {
-            db.ref('exams').once('value', s => {
-                const all = s.val();
-                document.getElementById('view-sub').classList.remove('hidden');
-                document.getElementById('sub-title').innerText = all[id].name;
-                const render = document.getElementById('sub-render');
+        function showSubCategories(parentId) {
+            database.ref('master_exams').once('value', snapshot => {
+                const allData = snapshot.val();
+                const overlay = document.getElementById('view-nested');
+                document.getElementById('nested-title').innerText = allData[parentId].name;
+                const render = document.getElementById('nested-render');
                 render.innerHTML = '';
-                
-                for(let k in all) {
-                    if(all[k].parent === all[id].name) {
-                        render.innerHTML += `<div class="exam-item" style="border-left-color:var(--primary)" onclick="openLevel('${k}')">${all[k].name}</div>`;
+
+                // Find Children
+                for(let key in allData) {
+                    if(allData[key].parent === allData[parentId].name) {
+                        render.innerHTML += `<div class="exam-card" onclick="showSubCategories('${key}')"><span>${allData[key].name}</span></div>`;
                     }
                 }
-                if(all[id].secs) {
-                    all[id].secs.split(',').forEach(sec => {
-                        render.innerHTML += `<div class="card">📄 ${sec.trim()}</div>`;
+                
+                // Show Stages if any
+                if(allData[parentId].stages) {
+                    allData[parentId].stages.split(',').forEach(s => {
+                        render.innerHTML += `<div class="admin-card" style="padding:15px; border-left:4px solid var(--primary);">📖 ${s.trim()}</div>`;
                     });
                 }
+                overlay.classList.remove('hidden');
             });
         }
 
-        function adminSave() {
-            const n = document.getElementById('in-name').value;
-            const p = document.getElementById('in-parent').value;
-            const s = document.getElementById('in-secs').value;
-            if(!n) return;
-            db.ref('exams/'+n).update({name:n, parent:p, secs:s}).then(() => {
-                alert("Updated!"); location.reload();
+        // ADMIN MODULE
+        function syncDataToFirebase() {
+            const n = document.getElementById('adm-name').value;
+            const p = document.getElementById('adm-parent').value;
+            const s = document.getElementById('adm-stages').value;
+            if(!n) return alert("Exam name is required!");
+            
+            database.ref('master_exams/' + n).update({
+                name: n, parent: p, stages: s
+            }).then(() => {
+                alert("Database Updated!");
+                location.reload();
             });
         }
 
-        function loadAdmin() {
-            db.ref('exams').on('value', s => {
-                const list = document.getElementById('adm-list');
-                list.innerHTML = '<h4>Existing Exams:</h4>';
-                s.forEach(c => {
-                    list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <span>${c.val().name}</span>
+        function runAdminModule() {
+            database.ref('master_exams').on('value', snapshot => {
+                const list = document.getElementById('admin-exam-list');
+                list.innerHTML = '<span class="section-title">Manage Database</span>';
+                snapshot.forEach(child => {
+                    const d = child.val();
+                    list.innerHTML += `<div class="admin-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><b>${d.name}</b><br><small>${d.parent ? 'Child of: '+d.parent : 'Main Category'}</small></div>
                         <div>
-                            <button onclick="editExam('${c.key}')" style="color:var(--secondary); background:none; border:none; margin-right:10px; font-weight:bold;">EDIT</button>
-                            <button onclick="db.ref('exams/${c.key}').remove()" style="color:red; background:none; border:none; font-weight:bold;">DEL</button>
+                            <button onclick="editMode('${child.key}')" style="color:var(--secondary); background:none; border:none; margin-right:15px; font-weight:bold;">EDIT</button>
+                            <button onclick="database.ref('master_exams/${child.key}').remove()" style="color:red; background:none; border:none; font-weight:bold;">DELETE</button>
                         </div>
                     </div>`;
                 });
             });
-            db.ref('attendance').on('value', s => {
-                let h = '';
-                s.forEach(u => {
-                    h += `<b>${u.key}:</b><br>`;
-                    u.forEach(l => { h += `• ${l.val().time}<br>`; });
+
+            database.ref('attendance_logs').on('value', snapshot => {
+                const logs = document.getElementById('log-render');
+                logs.innerHTML = '';
+                snapshot.forEach(user => {
+                    user.forEach(entry => {
+                        logs.innerHTML += `<div class="log-item"><b>${user.key}:</b> ${entry.val().timestamp}</div>`;
+                    });
                 });
-                document.getElementById('adm-logs').innerHTML = h || "No data.";
             });
         }
 
-        function editExam(id) {
-            db.ref('exams/'+id).once('value', s => {
+        function editMode(id) {
+            database.ref('master_exams/'+id).once('value', s => {
                 const d = s.val();
-                document.getElementById('in-name').value = d.name;
-                document.getElementById('in-parent').value = d.parent || '';
-                document.getElementById('in-secs').value = d.secs || '';
+                document.getElementById('adm-name').value = d.name;
+                document.getElementById('adm-parent').value = d.parent || '';
+                document.getElementById('adm-stages').value = d.stages || '';
                 window.scrollTo(0,0);
             });
         }
 
-        function doLogout() { localStorage.removeItem('currentUser'); location.reload(); }
+        function processLogout() { localStorage.removeItem('pro_auth_user'); location.reload(); }
     </script>
 </body>
 </html>
