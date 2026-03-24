@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyWay Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: #f0f2f5; }
+        .screen { height: 100vh; width: 100%; position: fixed; display: none; overflow-y: auto; }
+        #login-screen { display: flex; background: #1e3a8a; justify-content: center; align-items: center; z-index: 100; }
+        .login-box { background: white; padding: 30px; border-radius: 20px; width: 90%; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; background: #1e3a8a; }
+        header { background: #1e3a8a; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
+        .card { background: white; margin: 15px; padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        iframe { width: 100%; height: 200px; border-radius: 10px; border: none; margin-top: 10px; background: #000; }
+    </style>
+</head>
+<body>
+    <div id="login-screen" class="screen" style="display: flex;">
+        <div class="login-box">
+            <h2>StudyWay Pro</h2>
+            <input type="text" id="user-id" placeholder="Admin ID or Mobile Number">
+            <button onclick="login()" class="btn">Login</button>
+        </div>
+    </div>
+
+    <div id="admin-screen" class="screen">
+        <header>Admin Panel <span onclick="logout()">Logout</span></header>
+        <div class="card">
+            <h3>📢 Post Notice</h3>
+            <input type="text" id="admin-note" placeholder="Enter notice">
+            <button onclick="saveData('note')" class="btn">Update Notice</button>
+        </div>
+        <div class="card">
+            <h3>📹 Publish Video</h3>
+            <input type="text" id="v-name" placeholder="Topic">
+            <input type="text" id="v-id" placeholder="YouTube Video ID (e.g. dQw4w9WgXcQ)">
+            <button onclick="saveData('video')" class="btn">Publish Now</button>
+        </div>
+    </div>
+
+    <div id="student-screen" class="screen">
+        <header>StudyWay <span onclick="logout()">Logout</span></header>
+        <div id="stu-notice" style="background:#ffeb3b; padding:10px; text-align:center; font-weight:bold;">Welcome Students!</div>
+        <div id="video-display"></div>
+    </div>
+
+    <script>
+        const ADMIN_ID = "admin123";
+        function login() {
+            const id = document.getElementById('user-id').value;
+            if(!id) return alert("Enter ID");
+            document.getElementById('login-screen').style.display = 'none';
+            if(id === ADMIN_ID) { document.getElementById('admin-screen').style.display = 'block'; } 
+            else { document.getElementById('student-screen').style.display = 'block'; loadData(); }
+        }
+        function saveData(type) {
+            if(type === 'note') { localStorage.setItem('appNotice', document.getElementById('admin-note').value); } 
+            else { 
+                localStorage.setItem('vTitle', document.getElementById('v-name').value); 
+                localStorage.setItem('vId', document.getElementById('v-id').value); 
+            }
+            alert("Data Saved!");
+        }
+        function loadData() {
+            const n = localStorage.getItem('appNotice');
+            const vt = localStorage.getItem('vTitle');
+            const vi = localStorage.getItem('vId');
+            if(n) document.getElementById('stu-notice').innerText = "📢 " + n;
+            if(vt && vi) {
+                document.getElementById('video-display').innerHTML = `
+                    <div class="card">
+                        <h4>${vt}</h4>
+                        <iframe src="https://www.youtube.com/embed/${vi}" allowfullscreen></iframe>
+                    </div>`;
+            }
+        }
+        function logout() { location.reload(); }
+    </script>
+</body>
+  </html>
+  
