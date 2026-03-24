@@ -1,63 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Selection</title>
+    <title>Study Selection Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f4f7fe; color: #333; }
-        .screen { height: 100vh; width: 100%; position: fixed; display: none; overflow-y: auto; }
-        #login-screen { display: flex; background: #1e3a8a; justify-content: center; align-items: center; z-index: 100; }
-        .login-box { background: white; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 10px; font-size: 16px; outline: none; }
-        input:focus { border-color: #1e3a8a; }
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; background: #1e3a8a; font-size: 16px; margin-top: 10px; }
-        header { background: #1e3a8a; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; position: sticky; top: 0; z-index: 10; shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .card { background: white; margin: 15px; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        iframe { width: 100%; height: 200px; border-radius: 12px; border: none; margin-top: 10px; background: #000; }
-        .notice-bar { background: #fff9c4; padding: 12px; text-align: center; font-weight: bold; border-bottom: 2px solid #fbc02d; color: #856404; }
-        .logout-btn { font-size: 12px; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px; float: right; margin-top: -30px; cursor: pointer; }
+        :root { --primary: #1e3a8a; --accent: #3b82f6; --bg: #f8fafc; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: #334155; }
+        
+        /* UI Screens */
+        .screen { display: none; min-height: 100vh; width: 100%; }
+        
+        /* Login Style */
+        #login-screen { display: flex; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); justify-content: center; align-items: center; }
+        .login-card { background: white; padding: 40px 30px; border-radius: 30px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        
+        /* Buttons & Inputs */
+        input { width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; color: white; background: var(--primary); font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-exam { background: white; color: var(--primary); border: 2px solid var(--primary); margin-bottom: 10px; text-align: left; padding: 20px; font-size: 18px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* Header */
+        header { background: var(--primary); color: white; padding: 20px; position: sticky; top: 0; z-index: 100; border-radius: 0 0 20px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logout-link { font-size: 14px; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+
+        /* Content Area */
+        .container { padding: 20px; }
+        .welcome-msg { font-size: 22px; font-weight: bold; color: var(--primary); margin-bottom: 5px; }
+        .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--primary); }
+        .notice-box { background: #fef9c3; border: 1px solid #fde047; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-weight: 500; }
+        
+        /* Exam Sub-sections */
+        .sub-section { display: none; background: #f1f5f9; padding: 15px; border-radius: 12px; margin-top: -5px; margin-bottom: 15px; }
+        .tier-btn { background: #cbd5e1; padding: 10px; margin: 5px; border-radius: 8px; display: inline-block; font-size: 14px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="screen" style="display: flex;">
-        <div class="login-box">
-            <h1 style="color:#1e3a8a; margin-bottom: 5px;">Study Selection</h1>
-            <p style="color:#666; margin-bottom: 20px;">Quality Education for All</p>
-            <input type="text" id="user-id" placeholder="Enter Your Name or ID">
-            <button onclick="login()" class="btn">Login Now</button>
-        </div>
-    </div>
-
-    <div id="admin-screen" class="screen">
-        <header>Admin Panel</header>
-        <div class="logout-btn" onclick="location.reload()" style="margin-right:15px; margin-top: -35px;">Logout</div>
-        <div class="card">
-            <h3>📢 Update Notice</h3>
-            <input type="text" id="admin-note" placeholder="Write something new...">
-            <button onclick="updateNotice()" class="btn">Push Notice</button>
-        </div>
-        <div class="card">
-            <h3>📹 Post Video Class</h3>
-            <input type="text" id="v-name" placeholder="Class Name (e.g. Article 1)">
-            <input type="text" id="v-id" placeholder="YouTube Link or ID">
-            <button onclick="updateVideo()" class="btn">Publish Video</button>
+    <div id="login-screen" class="screen">
+        <div class="login-card">
+            <h1 style="color:var(--primary)">Study Selection</h1>
+            <p style="color:#64748b; margin-top:5px">Future starts here</p>
+            <input type="text" id="user-id" placeholder="Enter your full name">
+            <button onclick="login()" class="btn">Start Learning</button>
         </div>
     </div>
 
     <div id="student-screen" class="screen">
-        <header>Study Selection</header>
-        <div class="logout-btn" onclick="location.reload()" style="margin-right:15px; margin-top: -35px;">Logout</div>
-        <div id="stu-notice" class="notice-bar">📢 Welcome to your class!</div>
-        <div id="video-display"></div>
+        <header>
+            <span>Study Selection</span>
+            <div class="logout-link" onclick="logout()">Logout</div>
+        </header>
+        <div class="container">
+            <div class="welcome-msg" id="greet-user">Hello, Student!</div>
+            <p style="color:#64748b; margin-bottom:20px;">What would you like to study today?</p>
+            
+            <div id="stu-notice" class="notice-box">📢 Loading latest updates...</div>
+
+            <h3>Select Your Exam:</h3>
+            <br>
+            
+            <button class="btn btn-exam" onclick="toggleSub('upsc')">🏛️ UPSC <span>▼</span></button>
+            <div id="upsc" class="sub-section">
+                <div class="tier-btn" onclick="showContent('UPSC Prelims')">Prelims</div>
+                <div class="tier-btn" onclick="showContent('UPSC Mains')">Mains</div>
+                <div class="tier-btn" onclick="showContent('UPSC Interview')">Interview</div>
+            </div>
+
+            <button class="btn btn-exam" onclick="toggleSub('ssc')">📝 SSC <span>▼</span></button>
+            <div id="ssc" class="sub-section">
+                <div class="tier-btn" onclick="showContent('SSC Tier 1')">Tier 1</div>
+                <div class="tier-btn" onclick="showContent('SSC Tier 2')">Tier 2</div>
+                <div class="tier-btn" onclick="showContent('SSC Tier 3')">Tier 3</div>
+            </div>
+
+            <button class="btn btn-exam" onclick="toggleSub('railway')">🚂 Railway <span>▼</span></button>
+            <div id="railway" class="sub-section">
+                <div class="tier-btn" onclick="showContent('RRB NTPC')">NTPC</div>
+                <div class="tier-btn" onclick="showContent('RRB Group D')">Group D</div>
+                <div class="tier-btn" onclick="showContent('RRB ALP')">ALP</div>
+            </div>
+
+            <div id="video-area" style="margin-top:20px"></div>
+        </div>
+    </div>
+
+    <div id="admin-screen" class="screen">
+        <header>Admin Dashboard <div class="logout-link" onclick="logout()">Logout</div></header>
+        <div class="container">
+            <div class="card">
+                <h3>📢 Global Notice</h3>
+                <input type="text" id="admin-note" placeholder="Type news for all...">
+                <button onclick="updateNotice()" class="btn">Update Notice</button>
+            </div>
+            <div class="card">
+                <h3>📹 Publish Content</h3>
+                <input type="text" id="v-name" placeholder="Title (e.g. History Class)">
+                <input type="text" id="v-id" placeholder="YouTube Video ID">
+                <button onclick="updateVideo()" class="btn">Publish Video</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // FIREBASE CONFIG (Copied from your photo 1000005398.jpg)
+        // FIREBASE CONFIG
         const firebaseConfig = {
           apiKey: "AIzaSyAssYG20lFBlE6pHdVMZjuN-7mN-K3Yx1M",
           authDomain: "study-selection.firebaseapp.com",
@@ -68,51 +118,74 @@
           appId: "1:511233122426:web:7a4fb8e0df62f0f803f262"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function login() {
-            const id = document.getElementById('user-id').value;
-            if(!id) return alert("Enter ID first!");
-            
-            document.getElementById('login-screen').style.display = 'none';
-            if(id.toLowerCase() === "admin123") {
-                document.getElementById('admin-screen').style.display = 'block';
-            } else {
-                document.getElementById('student-screen').style.display = 'block';
-                startSync();
+        // AUTO-LOGIN CHECK
+        window.onload = function() {
+            const savedUser = localStorage.getItem('studyUser');
+            if(savedUser) {
+                showScreen(savedUser);
             }
         }
 
+        function login() {
+            const name = document.getElementById('user-id').value;
+            if(!name) return alert("Please enter your name");
+            
+            localStorage.setItem('studyUser', name);
+            showScreen(name);
+        }
+
+        function showScreen(name) {
+            document.getElementById('login-screen').style.display = 'none';
+            if(name.toLowerCase() === 'admin123') {
+                document.getElementById('admin-screen').style.display = 'block';
+            } else {
+                document.getElementById('student-screen').style.display = 'block';
+                document.getElementById('greet-user').innerText = "Welcome, " + name + "! 👋";
+                syncData();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('studyUser');
+            location.reload();
+        }
+
+        function toggleSub(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function showContent(exam) {
+            alert("Opening content for: " + exam);
+            // Future mein yahan specific page link daal sakte hain
+        }
+
+        // FIREBASE SYNC
         function updateNotice() {
             const note = document.getElementById('admin-note').value;
-            db.ref('appData/notice').set(note).then(() => alert("Notice Updated!"));
+            db.ref('appData/notice').set(note).then(()=>alert("Sent!"));
         }
 
         function updateVideo() {
             const name = document.getElementById('v-name').value;
-            let vid = document.getElementById('v-id').value;
-            // Extract ID if full link is pasted
-            if(vid.includes("v=")) vid = vid.split("v=")[1].split("&")[0];
-            if(vid.includes("be/")) vid = vid.split("be/")[1].split("?")[0];
-            
-            db.ref('appData/video').set({ title: name, id: vid }).then(() => alert("Video Published!"));
+            const vid = document.getElementById('v-id').value;
+            db.ref('appData/video').set({title: name, id: vid}).then(()=>alert("Published!"));
         }
 
-        function startSync() {
-            // Realtime Update for Notice
-            db.ref('appData/notice').on('value', (snap) => {
-                if(snap.exists()) document.getElementById('stu-notice').innerText = "📢 " + snap.val();
+        function syncData() {
+            db.ref('appData/notice').on('value', snap => {
+                document.getElementById('stu-notice').innerText = "📢 " + (snap.val() || "No new updates.");
             });
-            // Realtime Update for Video
-            db.ref('appData/video').on('value', (snap) => {
+            db.ref('appData/video').on('value', snap => {
                 const data = snap.val();
-                if(data && data.id) {
-                    document.getElementById('video-display').innerHTML = `
+                if(data) {
+                    document.getElementById('video-area').innerHTML = `
                         <div class="card">
-                            <h4 style="margin-bottom:10px;">${data.title}</h4>
-                            <iframe src="https://www.youtube.com/embed/${data.id}" allowfullscreen></iframe>
+                            <h4>Current Class: ${data.title}</h4>
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/${data.id}" frameborder="0" allowfullscreen style="border-radius:12px; margin-top:10px;"></iframe>
                         </div>`;
                 }
             });
