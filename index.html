@@ -3,103 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Selection Pro - Ultimate Edition</title>
+    <title>Study Selection - Pro Academy</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 🚫 AGGRESSIVE AD-SHIELD */
-        iframe, ins, .appgeyser-ad-unit, [id*="ads"], a[href*="appsgeyser"], .footer-banner {
-            display: none !important; height: 0 !important; visibility: hidden !important; position: absolute !important; top: -1000px !important;
-        }
+        /* 🚫 AD-SHIELD */
+        iframe, ins, .appgeyser-ad-unit, [id*="ads"] { display: none !important; }
 
-        :root { --bg: #0a0e17; --primary: #2563eb; --purple: #7c3aed; --green: #10b981; --orange: #f97316; --text: #ffffff; --card-bg: #161b26; }
+        :root { --bg: #0a0e17; --primary: #1d4ed8; --card-bg: #161b26; --accent: #f97316; --purple: #7c3aed; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { background: var(--bg); color: white; }
 
-        /* UI Elements */
-        .header { padding: 30px 20px; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 0 20px; margin-bottom: 25px; }
-        .stat-card { background: var(--card-bg); padding: 15px; border-radius: 18px; text-align: center; border: 1px solid #2d3748; }
+        /* AUTH & PAGES */
+        #view-auth { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 30px; }
+        .page { display: none; padding-bottom: 90px; }
+        .active { display: block; }
+
+        /* HEADER & STATS */
+        .header { padding: 25px; background: linear-gradient(to right, #1e40af, #1e3a8a); border-radius: 0 0 30px 30px; }
         
-        .exam-card { border-radius: 25px; padding: 25px; margin: 0 20px 20px 20px; position: relative; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .exam-card:active { transform: scale(0.96); }
-        .tag-post { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 12px; font-size: 10px; }
-        
-        /* Profile & Forms */
-        .page { display: none; padding-bottom: 100px; }
-        .active-page { display: block; }
-        .input-box { width: 100%; padding: 16px; background: #1f2937; border: 1px solid #374151; border-radius: 12px; color: white; margin-bottom: 15px; outline: none; }
-        .btn-main { background: var(--orange); color: white; padding: 16px; border-radius: 12px; border: none; width: 100%; font-weight: 700; cursor: pointer; }
+        /* EXAM & SECTION CARDS */
+        .exam-card { background: var(--card-bg); margin: 15px 20px; padding: 20px; border-radius: 20px; border-left: 6px solid var(--primary); }
+        .action-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-sm { flex: 1; padding: 10px; border-radius: 10px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; color: white; }
+        .btn-video { background: #ef4444; } /* YouTube Red */
+        .btn-quiz { background: #10b981; }  /* Success Green */
 
-        /* Navigation */
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #111827; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1f2937; z-index: 1000; }
-        .nav-item { text-align: center; color: #6b7280; font-size: 11px; cursor: pointer; }
-        .nav-item.active { color: var(--primary); font-weight: 700; }
+        /* PROFILE */
+        .profile-card { background: #1e293b; margin: 20px; padding: 25px; border-radius: 20px; border: 1px solid #334155; }
+        .avatar { width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 10px; }
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; display: none; padding-bottom: 100px; }
-        .section-item { background: var(--card-bg); margin: 12px 20px; padding: 18px; border-radius: 15px; border-left: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        .input-field { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; margin-bottom: 15px; }
+        .btn-main { background: var(--accent); color: white; padding: 15px; border-radius: 12px; border: none; width: 100%; font-weight: 700; }
+
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #111827; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1f2937; }
+        .nav-item { text-align: center; color: #64748b; font-size: 11px; cursor: pointer; }
+        .active-nav { color: white; }
     </style>
 </head>
 <body>
 
-    <div id="page-home" class="page active-page">
+    <div id="view-auth">
+        <div style="background:#1e293b; padding:30px; border-radius:25px; text-align:center;">
+            <h1 style="color:var(--accent); margin-bottom:10px;">Study Selection</h1>
+            <p style="color:#94a3b8; margin-bottom:30px;">Login to Constitution Series</p>
+            <input type="text" id="login-name" class="input-field" placeholder="Enter Your Name">
+            <button onclick="handleLogin()" class="btn-main">LOGIN</button>
+        </div>
+    </div>
+
+    <div id="page-home" class="page">
         <div class="header">
-            <p style="color:#94a3b8; font-size:12px;">NAMASTE</p>
-            <h1 id="greet-name">Student</h1>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div><p style="font-size:12px; opacity:0.7;">Welcome,</p><h2 id="user-head">User</h2></div>
+                <button onclick="logout()" style="background:none; border:1px solid white; color:white; padding:4px 10px; border-radius:8px; font-size:11px;">LOGOUT</button>
+            </div>
         </div>
-        <div class="stats-grid">
-            <div class="stat-card"><h3 id="count-ex">8</h3><p style="font-size:10px; color:#94a3b8;">Exams</p></div>
-            <div class="stat-card"><h3 id="count-sec">35</h3><p style="font-size:10px; color:#94a3b8;">Sections</p></div>
-            <div class="stat-card"><h3>100+</h3><p style="font-size:10px; color:#94a3b8;">Subjects</p></div>
-        </div>
+        <div style="padding:20px 20px 0 20px;"><h3>Recommended for You</h3></div>
         <div id="render-exams"></div>
     </div>
 
-    <div id="page-bookmarks" class="page" style="padding:20px;">
-        <h2>My Saved Articles</h2>
-        <div id="render-saved" style="margin-top:20px; color:#94a3b8; text-align:center;">No bookmarks yet.</div>
+    <div id="page-profile" class="page">
+        <div class="header"><h2>Student Profile</h2></div>
+        <div class="profile-card">
+            <div class="avatar" id="avatar">U</div>
+            <h3 id="prof-name">User Name</h3>
+            <p style="font-size:12px; color:#94a3b8; margin-bottom:15px;">Student Account Verified</p>
+            <div style="border-top:1px solid #334155; padding-top:10px;">
+                <p><strong>Target:</strong> <span id="disp-target" style="color:var(--accent);">Not Set</span></p>
+                <p><strong>Contact:</strong> <span id="disp-phone" style="color:#94a3b8;">Not Linked</span></p>
+            </div>
+        </div>
+        <div style="padding:20px;">
+            <input type="text" id="in-phone" class="input-field" placeholder="Update Phone Number">
+            <input type="text" id="in-exam" class="input-field" placeholder="Update Target Exam">
+            <button onclick="updateProfile()" class="btn-main">SYNC TO CLOUD</button>
+        </div>
     </div>
 
-    <div id="page-profile" class="page" style="padding:20px;">
-        <h2>Student Profile</h2>
-        <div class="stat-card" style="margin:20px 0; text-align:left;">
-            <p><strong>Name:</strong> <span id="prof-name"></span></p>
-            <p><strong>Status:</strong> Active Student</p>
-        </div>
-        <div style="background:var(--card-bg); padding:20px; border-radius:20px;">
-            <p style="margin-bottom:15px; font-weight:600;">Update Details (Sync with Admin)</p>
-            <input type="text" id="up-phone" class="input-box" placeholder="Phone Number">
-            <input type="text" id="up-target" class="input-box" placeholder="Target Exam (e.g. SSC CGL)">
-            <button onclick="syncProfile()" class="btn-main">SAVE & SYNC</button>
-        </div>
-        <button onclick="logout()" style="background:none; border:1px solid red; color:red; margin-top:20px;" class="btn-main">LOGOUT ACCOUNT</button>
-    </div>
-
-    <div id="page-admin" class="page" style="padding:20px;">
-        <h2 style="color:var(--orange);">Admin Dashboard</h2>
-        <div class="stat-card" style="margin-top:20px;">
-            <input type="text" id="adm-name" class="input-box" placeholder="Exam Name">
-            <input type="text" id="adm-parent" class="input-box" placeholder="Parent (e.g. SSC)">
-            <input type="text" id="adm-stages" class="input-box" placeholder="Stages (Tier 1, Tier 2)">
-            <button onclick="adminPush()" class="btn-main">ADD EXAM</button>
-        </div>
-        <div id="adm-sync-list"></div>
-    </div>
-
-    <div id="view-detail" class="overlay">
-        <div id="detail-header" style="padding:40px 20px; border-radius:0 0 30px 30px;">
-            <div onclick="closeDetail()" style="font-size:25px; margin-bottom:15px; cursor:pointer;">← BACK</div>
-            <h1 id="det-title">Exam</h1>
-            <p id="det-sub" style="opacity:0.7; font-size:13px;"></p>
-        </div>
-        <div id="render-sub-sections" style="margin-top:20px;"></div>
-    </div>
-
-    <nav>
-        <div class="nav-item active" onclick="switchPage('home')">🏠<br>Home</div>
-        <div class="nav-item" onclick="switchPage('bookmarks')">🔖<br>Bookmarks</div>
-        <div class="nav-item" onclick="switchPage('profile')">👤<br>Profile</div>
+    <nav id="navbar" style="display:none;">
+        <div class="nav-item active-nav" onclick="showPage('home')">🏠<br>Home</div>
+        <div class="nav-item" onclick="showPage('profile')">👤<br>Profile</div>
     </nav>
 
     <script>
@@ -115,89 +100,70 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 🛡️ AD-KILLER ENGINE
-        setInterval(() => {
-            document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, a[href*="appsgeyser"]').forEach(el => el.remove());
-        }, 100);
+        // 📚 Comprehensive Exam List with Video/Quiz links placeholder
+        const exams = [
+            { name: "Constitution Series", sub: "Article 1 to 395", video: "#", quiz: "#" },
+            { name: "UPSC Prelims", sub: "General Studies & CSAT", video: "#", quiz: "#" },
+            { name: "SSC CGL (Tier I)", sub: "Maths, Reasoning, English, GA", video: "#", quiz: "#" },
+            { name: "SSC CHSL", sub: "Combined Higher Secondary", video: "#", quiz: "#" },
+            { name: "Banking (PO/Clerk)", sub: "Quant & Aptitude", video: "#", quiz: "#" }
+        ];
 
-        // 🏗️ EXPANDED EXAM DATA
-        const fullExams = {
-            "UPSC": { name: "UPSC", full: "Union Public Service Commission", posts: "1200+", col: "linear-gradient(135deg, #2563eb, #1e40af)", stages: "Prelims, Mains, Interview" },
-            "SSC CGL": { name: "SSC CGL", full: "Combined Graduate Level", posts: "8000+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "Tier I, Tier II" },
-            "SSC CHSL": { name: "SSC CHSL", full: "10+2 Level Exam", posts: "4500+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "Tier I, Tier II" },
-            "Banking": { name: "Banking", full: "SBI & IBPS PO/Clerk", posts: "12000+", col: "linear-gradient(135deg, #059669, #065f46)", stages: "Prelims, Mains" },
-            "Railway": { name: "Railway", full: "NTPC & Group D", posts: "20000+", col: "linear-gradient(135deg, #f59e0b, #b45309)", stages: "CBT 1, CBT 2" },
-            "Defence": { name: "Defence", full: "NDA, CDS, AFCAT", posts: "1000+", col: "linear-gradient(135deg, #dc2626, #991b1b)", stages: "Written, SSB Interview" },
-            "SSC GD": { name: "SSC GD", full: "Constable GD Exam", posts: "26000+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "CBE, PET/PST" },
-            "SSC CPO": { name: "SSC CPO", full: "SI in Delhi Police", posts: "4000+", col: "linear-gradient(135deg, #7c3aed, #5b21b6)", stages: "Paper 1, PET, Paper 2" }
-        };
-
-        function switchPage(p) {
-            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
-            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
-            document.getElementById('page-'+p).classList.add('active-page');
-            event.currentTarget.classList.add('active');
+        function handleLogin() {
+            const n = document.getElementById('login-name').value;
+            if(!n) return alert("Please enter name");
+            localStorage.setItem('study_user', n);
+            location.reload();
         }
 
         window.onload = () => {
             const user = localStorage.getItem('study_user');
-            if(!user) {
-                const n = prompt("Enter your name to login:");
-                if(n) { localStorage.setItem('study_user', n); location.reload(); }
+            if(user) {
+                document.getElementById('view-auth').style.display = 'none';
+                document.getElementById('navbar').style.display = 'flex';
+                showPage('home');
+                document.getElementById('user-head').innerText = user;
+                document.getElementById('prof-name').innerText = user;
+                document.getElementById('avatar').innerText = user[0].toUpperCase();
+                
+                db.ref('users/' + user).on('value', s => {
+                    const d = s.val();
+                    if(d) {
+                        document.getElementById('disp-target').innerText = d.exam || 'Not Set';
+                        document.getElementById('disp-phone').innerText = d.phone || 'Not Linked';
+                    }
+                });
+                renderExams();
             }
-            document.getElementById('greet-name').innerText = user;
-            document.getElementById('prof-name').innerText = user;
-            
-            if(user === 'admin123') switchPage('admin');
-            renderHome();
         };
 
-        function renderHome() {
+        function renderExams() {
             const container = document.getElementById('render-exams');
-            container.innerHTML = '';
-            let count = 0;
-            for(let k in fullExams) {
-                count++;
-                const ex = fullExams[k];
-                container.innerHTML += `
-                    <div class="exam-card" style="background:${ex.col}" onclick="openDetail('${k}')">
-                        <div class="tag-post">${ex.posts} Posts</div>
-                        <h2 style="font-size:22px;">${ex.name}</h2>
-                        <p style="font-size:12px; opacity:0.8;">${ex.full}</p>
-                        <div style="margin-top:15px; font-size:11px;">📚 ${ex.stages.split(',').length} Sections ➔</div>
-                    </div>`;
-            }
-            document.getElementById('count-ex').innerText = count;
+            container.innerHTML = exams.map(ex => `
+                <div class="exam-card">
+                    <strong>${ex.name}</strong><br>
+                    <small style="color:#94a3b8">${ex.sub}</small>
+                    <div class="action-btns">
+                        <button class="btn-sm btn-video" onclick="alert('Opening Video Lecture...')">🎥 VIDEO</button>
+                        <button class="btn-sm btn-quiz" onclick="alert('Starting Daily Quiz...')">📝 QUIZ</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function openDetail(id) {
-            const ex = fullExams[id];
-            const overlay = document.getElementById('view-detail');
-            document.getElementById('detail-header').style.background = ex.col;
-            document.getElementById('det-title').innerText = ex.name;
-            document.getElementById('det-sub').innerText = ex.full;
-            
-            const render = document.getElementById('render-sub-sections');
-            render.innerHTML = '';
-            ex.stages.split(',').forEach((s, i) => {
-                render.innerHTML += `
-                    <div class="section-item">
-                        <div><small style="color:#94a3b8">Section ${i+1}</small><br><strong>${s.trim()}</strong></div>
-                        <div style="color:var(--orange)">START ➔</div>
-                    </div>`;
-            });
-            overlay.style.display = 'block';
+        function updateProfile() {
+            const u = localStorage.getItem('study_user');
+            const phone = document.getElementById('in-phone').value;
+            const exam = document.getElementById('in-exam').value;
+            db.ref('users/' + u).update({ phone, exam });
+            alert("Profile Updated!");
         }
 
-        function syncProfile() {
-            const user = localStorage.getItem('study_user');
-            const phone = document.getElementById('up-phone').value;
-            const target = document.getElementById('up-target').value;
-            db.ref('students/' + user.replace(/\s/g,'_')).update({ phone, target, last_sync: new Date().toLocaleString() });
-            alert("Profile Synced with Admin Database!");
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-'+id).classList.add('active');
         }
 
-        function closeDetail() { document.getElementById('view-detail').style.display = 'none'; }
         function logout() { localStorage.removeItem('study_user'); location.reload(); }
     </script>
 </body>
