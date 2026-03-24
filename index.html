@@ -3,98 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Selection - Final Pro</title>
+    <title>Study Selection</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* 🚫 MULTI-LAYER AD KILLER (Aggressive Mode) */
-        iframe, ins, .appgeyser-ad-unit, [id*="ads"], [class*="ads"], [id*="advert"], 
-        div[style*="z-index: 2147483647"], #p_527038, .adsbygoogle {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            height: 0 !important;
-            width: 0 !important;
-            position: absolute !important;
-            left: -9999px !important;
-            pointer-events: none !important;
+        /* 🚫 PERMANENT AD-BLOCKER (FORCED) */
+        iframe, ins, .appgeyser-ad-unit, [id*="ads"], [class*="ads"], [id*="p_"], 
+        div[style*="z-index: 2147483647"], div[style*="fixed"] { 
+            display: none !important; visibility: hidden !important; opacity: 0 !important; 
+            pointer-events: none !important; height: 0 !important; width: 0 !important;
         }
 
-        :root { --bg: #0a1122; --card: #121e36; --text: #f1f5f9; --accent: #f97316; }
+        :root { --bg: #0a1122; --card: #121e36; --accent: #f97316; --text: #f1f5f9; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+        .hidden { display: none !important; }
         
-        /* Premium UI */
-        .btn-p { background: var(--accent); color: white; padding: 16px; border-radius: 18px; border: none; width: 100%; font-weight: 700; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3); }
-        .input-d { width: 100%; padding: 16px; background: rgba(255,255,255,0.07); color: white; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 18px; outline: none; }
-        .card { background: var(--card); padding: 22px; border-radius: 24px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .e-card { padding: 25px; border-radius: 22px; margin-bottom: 15px; cursor: pointer; background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .e-card:active { transform: scale(0.96); }
+        /* UI Elements */
+        .card { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .input-d { width: 100%; padding: 15px; background: rgba(255,255,255,0.05); color: white; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; outline: none; }
+        .btn-p { background: var(--accent); color: white; padding: 15px; border-radius: 15px; border: none; width: 100%; font-weight: 600; cursor: pointer; }
+        .e-card { padding: 20px; border-radius: 18px; margin-bottom: 12px; cursor: pointer; background: #1e293b; display: flex; justify-content: space-between; align-items: center; }
 
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #121e36; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); z-index: 5000; }
-        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 3000; overflow-y: auto; padding: 20px; padding-bottom: 100px; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--card); display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
     </style>
 </head>
 <body>
 
-    <div id="view-login" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 25px;">
+    <div id="view-login" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
         <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
-            <h1 style="color:var(--accent); font-size: 32px; margin-bottom: 10px;">Study Selection</h1>
-            <p style="color:#94a3b8; margin-bottom: 35px;">Quality Education Portal</p>
-            <input type="text" id="user-name" class="input-d" placeholder="Apna Naam Likhein">
-            <button onclick="handleLogin()" class="btn-p">ENTER ACADEMY</button>
+            <h2 style="color:var(--accent); margin-bottom: 20px;">Study Selection</h2>
+            <input type="text" id="user-name" class="input-d" placeholder="Enter Name">
+            <button onclick="handleLogin()" class="btn-p">Login</button>
         </div>
     </div>
 
-    <div id="view-student" class="hidden">
-        <header style="padding: 30px 20px; display: flex; justify-content: space-between; align-items: center;">
-            <div><p style="font-size:12px; color:#94a3b8; letter-spacing: 1px;">NAMASTE,</p><h2 id="display-name" style="color:var(--accent);">User</h2></div>
-            <div onclick="doLogout()" style="background:rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor:pointer;">LOGOUT</div>
-        </header>
-
-        <div style="padding: 0 20px 20px 20px;">
-            <div class="card" style="background: linear-gradient(to right, #f97316, #ea580c); color:white;">
-                <h3>Professional Mode Active</h3>
-                <p style="font-size: 12px; opacity: 0.9;">Choose your exam and start learning.</p>
-            </div>
-            <h3 style="margin-bottom: 15px;">Target Exams</h3>
-            <div id="exam-list"></div>
-        </div>
-
+    <div id="view-student" class="hidden" style="padding: 20px; padding-bottom: 100px;">
+        <h3 id="display-name" style="margin-bottom: 20px; color: var(--accent);">Welcome</h3>
+        <div id="exam-list"></div>
         <nav>
-            <div onclick="location.reload()" style="text-align:center; color:var(--accent); font-size: 12px;">🏠<br>Home</div>
-            <div onclick="alert('Library Coming Soon!')" style="text-align:center; color:#94a3b8; font-size: 12px;">📚<br>Library</div>
-            <div onclick="doLogout()" style="text-align:center; color:#94a3b8; font-size: 12px;">👤<br>Profile</div>
+            <div onclick="location.reload()" style="cursor:pointer; color:var(--accent);">🏠 Home</div>
+            <div onclick="doLogout()" style="cursor:pointer;">👤 Logout</div>
         </nav>
     </div>
 
-    <div id="view-admin" class="hidden">
-        <header style="padding: 20px; background:var(--card); display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="color:var(--accent);">Admin Hub</h2>
-            <button onclick="doLogout()" style="color:red; background:none; border:none; font-weight:bold;">LOGOUT</button>
-        </header>
-        <div style="padding: 20px;">
-            <div class="card">
-                <h4>Add/Edit Nested Exam</h4>
-                <input type="text" id="in-name" class="input-d" placeholder="Exam Name (e.g. CGL)">
-                <input type="text" id="in-parent" class="input-d" placeholder="Parent Name (e.g. SSC) - Main ke liye khali chode">
-                <input type="text" id="in-secs" class="input-d" placeholder="Stages (Tier 1, Tier 2)">
-                <button onclick="adminSave()" class="btn-p">SAVE & SYNC DATA</button>
-            </div>
-            <div id="adm-list"></div>
-            <div class="card" style="margin-top:20px;">
-                <h4>Student Attendance History (Permanent)</h4>
-                <div id="adm-logs" style="font-size:12px; line-height: 1.6;">Logs loading...</div>
-            </div>
+    <div id="view-admin" class="hidden" style="padding: 20px;">
+        <div class="card">
+            <h3>Admin Panel</h3>
+            <input type="text" id="in-name" class="input-d" placeholder="Exam Name (CGL, CHSL)">
+            <input type="text" id="in-parent" class="input-d" placeholder="Parent Category (SSC)">
+            <input type="text" id="in-secs" class="input-d" placeholder="Stages (Tier 1, Tier 2)">
+            <button onclick="adminSave()" class="btn-p">Save Exam</button>
         </div>
-    </div>
-
-    <div id="view-sub" class="hidden full-page">
-        <div onclick="this.parentElement.classList.add('hidden')" style="color:var(--accent); font-weight:bold; cursor:pointer; margin-bottom:20px; display: flex; align-items:center;">← BACK TO MENU</div>
-        <h2 id="sub-title" style="margin-bottom:25px; border-left: 4px solid var(--accent); padding-left: 15px;"></h2>
-        <div id="sub-render"></div>
+        <div id="adm-exams"></div>
+        <div class="card" style="margin-top:20px;">
+            <h4>Login History</h4>
+            <div id="adm-logs" style="font-size: 12px; color: #94a3b8;"></div>
+        </div>
     </div>
 
     <script>
@@ -110,25 +76,20 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 🛡️ ULTRA AD-BLOCKER (Runs every 50ms to kill AppGeyser ads)
-        setInterval(() => {
-            const trash = document.querySelectorAll('iframe, .appgeyser-ad-unit, ins, [id*="ads"], [class*="ads"], [id*="p_"]');
-            trash.forEach(t => { t.remove(); });
-            document.querySelectorAll('div').forEach(d => {
-                if(parseInt(window.getComputedStyle(d).zIndex) > 2000000) d.remove();
+        // 🛡️ AD-BLOCKER ENGINE (Mutation Observer)
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach(() => {
+                const ads = document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, [id*="ads"], [id*="p_"]');
+                ads.forEach(ad => ad.remove());
             });
-        }, 50);
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
 
         function handleLogin() {
             const name = document.getElementById('user-name').value.trim();
             if(!name) return;
-            
-            // 📊 RECORDING LOGIN PERMANENTLY
             if(name.toLowerCase() !== 'admin123') {
-                db.ref('attendance/' + name.replace(/\s/g,'_')).push({
-                    time: new Date().toLocaleString(),
-                    date: new Date().toDateString()
-                });
+                db.ref('attendance/' + name.replace(/\s/g,'_')).push({ time: new Date().toLocaleString() });
             }
             localStorage.setItem('studyUser', name);
             location.reload();
@@ -143,7 +104,7 @@
                 loadAdmin();
             } else {
                 document.getElementById('view-student').classList.remove('hidden');
-                document.getElementById('display-name').innerText = user;
+                document.getElementById('display-name').innerText = "Namaste, " + user;
                 loadStudent();
             }
         };
@@ -151,37 +112,13 @@
         function loadStudent() {
             db.ref('exams').on('value', s => {
                 const data = s.val();
-                const list = document.getElementById('exam-list');
-                list.innerHTML = '';
+                const container = document.getElementById('exam-list');
+                container.innerHTML = '';
                 for(let k in data) {
-                    if(!data[k].parent) { // Only Main Categories
-                        list.innerHTML += `<div class="e-card" onclick="openSub('${k}')"><h3>${data[k].name}</h3><span>➔</span></div>`;
+                    if(!data[k].parent) {
+                        container.innerHTML += `<div class="e-card"><h3>${data[k].name}</h3></div>`;
                     }
                 }
-            });
-        }
-
-        function openSub(id) {
-            db.ref('exams').once('value', s => {
-                const all = s.val();
-                const sub = document.getElementById('view-sub');
-                const render = document.getElementById('sub-render');
-                document.getElementById('sub-title').innerText = all[id].name;
-                render.innerHTML = '';
-                
-                // Sub-exams (SSC -> CGL)
-                for(let k in all) {
-                    if(all[k].parent === all[id].name) {
-                        render.innerHTML += `<div class="e-card" style="background:#1e293b" onclick="openSub('${k}')"><h3>${all[k].name}</h3></div>`;
-                    }
-                }
-                // Direct Stages (CGL -> Tier 1)
-                if(all[id].secs) {
-                    all[id].secs.split(',').forEach(sec => {
-                        render.innerHTML += `<div class="card" style="background:rgba(255,255,255,0.03);"><h4>● ${sec.trim()}</h4></div>`;
-                    });
-                }
-                sub.classList.remove('hidden');
             });
         }
 
@@ -190,35 +127,30 @@
             const p = document.getElementById('in-parent').value;
             const s = document.getElementById('in-secs').value;
             if(!n) return;
-            db.ref('exams/'+n).update({name:n, parent:p, secs:s}).then(() => {
-                alert("Saved Successfully!");
-                location.reload();
-            });
+            db.ref('exams/'+n).update({name:n, parent:p, secs:s}).then(() => location.reload());
         }
 
         function loadAdmin() {
             db.ref('exams').on('value', s => {
-                const list = document.getElementById('adm-list');
-                list.innerHTML = '<h4 style="margin:20px 0 10px 0;">Manage Exams:</h4>';
+                const list = document.getElementById('adm-exams');
+                list.innerHTML = '<h4>Existing Exams:</h4>';
                 s.forEach(c => {
-                    list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; padding:12px;">
+                    list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
                         <span>${c.val().name}</span>
                         <div>
-                            <button onclick="editExam('${c.key}')" style="color:var(--accent); background:none; border:none; margin-right:15px; font-weight:bold;">EDIT</button>
-                            <button onclick="db.ref('exams/${c.key}').remove()" style="color:red; background:none; border:none; font-weight:bold;">DEL</button>
+                            <button onclick="editExam('${c.key}')" style="color:orange; background:none; border:none; margin-right:10px;">Edit</button>
+                            <button onclick="db.ref('exams/${c.key}').remove()" style="color:red; background:none; border:none;">Delete</button>
                         </div>
                     </div>`;
                 });
             });
-            // 📊 ATTENDANCE HISTORY
             db.ref('attendance').on('value', s => {
-                let html = '';
-                s.forEach(user => {
-                    html += `<div style="margin-bottom:10px;"><b style="color:var(--accent)">${user.key}:</b><br>`;
-                    user.forEach(log => { html += `<span style="opacity:0.6">• ${log.val().time}</span><br>`; });
-                    html += '</div><hr style="opacity:0.1">';
+                let h = '';
+                s.forEach(u => {
+                    h += `<b>${u.key}:</b><br>`;
+                    u.forEach(l => { h += `• ${l.val().time}<br>`; });
                 });
-                document.getElementById('adm-logs').innerHTML = html || "No records yet.";
+                document.getElementById('adm-logs').innerHTML = h || "No logs.";
             });
         }
 
