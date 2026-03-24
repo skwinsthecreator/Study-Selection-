@@ -3,88 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Selection - Comprehensive Portal</title>
-    
+    <title>Study Selection Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 🚫 SHIELD AGAINST APPSGEYSER ADS */
-        iframe, ins, .appgeyser-ad-unit, [id*="ads"], [class*="ads"], 
-        div[style*="z-index: 2147483647"], div[id*="p_"], a[href*="appsgeyser"] {
-            display: none !important; visibility: hidden !important; 
-            height: 0 !important; width: 0 !important; position: absolute !important;
-            top: -5000px !important; pointer-events: none !important;
+        /* 🚫 APPSGEYSER AD BLOCKER */
+        iframe, ins, .appgeyser-ad-unit, [id*="ads"], a[href*="appsgeyser"] {
+            display: none !important; height: 0 !important; visibility: hidden !important;
         }
 
-        :root { --primary: #002e6e; --secondary: #f97316; --bg: #f4f7fa; --white: #ffffff; }
+        :root { --bg: #0a0e17; --card-blue: #1d4ed8; --card-purple: #7c3aed; --card-green: #059669; --text-white: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: #1e293b; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text-white); }
 
-        /* UI Styling */
-        .header { background: var(--primary); color: white; padding: 40px 20px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .exam-item { background: white; padding: 22px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--secondary); cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .exam-item:active { transform: scale(0.97); background: #f1f5f9; }
-        
-        .btn-p { background: var(--secondary); color: white; padding: 16px; border-radius: 14px; border: none; width: 100%; font-weight: 700; cursor: pointer; margin-top: 10px; }
-        .input-d { width: 100%; padding: 16px; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-bottom: 12px; outline: none; }
-        
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 1000; }
-        .nav-item { text-align: center; color: #64748b; font-size: 12px; cursor: pointer; font-weight: 500; }
-        .nav-item.active { color: var(--primary); font-weight: 700; }
+        .header-top { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 0 20px; margin-bottom: 30px; }
+        .stat-box { background: #161b26; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #2d3748; }
+        .stat-box h3 { font-size: 18px; color: var(--text-white); }
+        .stat-box p { font-size: 11px; color: #a0aec0; }
 
+        .section-title { padding: 0 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .exam-list { padding: 0 20px 100px 20px; }
+        
+        /* Professional Cards (Image 1000005429 Style) */
+        .exam-card { border-radius: 25px; padding: 25px; margin-bottom: 20px; position: relative; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .blue-card { background: linear-gradient(135deg, #2563eb, #1e40af); }
+        .purple-card { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .green-card { background: linear-gradient(135deg, #10b981, #047857); }
+        
+        .post-tag { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 11px; }
+        .exam-name { font-size: 24px; font-weight: 700; margin: 10px 0; }
+        .exam-desc { font-size: 13px; opacity: 0.8; margin-bottom: 15px; }
+        .exam-footer { font-size: 12px; display: flex; align-items: center; gap: 10px; }
+
+        /* Overlay View (Image 1000005430 & 5431 Style) */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; display: none; }
+        .sub-header { padding: 40px 20px; border-radius: 0 0 30px 30px; }
+        .section-box { background: #161b26; margin: 15px 20px; padding: 20px; border-radius: 20px; border-left: 5px solid; display: flex; justify-content: space-between; align-items: center; }
+        .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .tag { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; font-size: 10px; border: 1px solid rgba(255,255,255,0.2); }
+
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #111827; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #1f2937; }
         .hidden { display: none !important; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px 20px 100px 20px; }
     </style>
 </head>
 <body>
 
-    <div id="view-login" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 25px; background: var(--primary);">
-        <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
-            <h2 style="color:var(--primary); margin-bottom: 30px;">STUDY SELECTION</h2>
-            <input type="text" id="user-in" class="input-d" placeholder="Student Name">
-            <button onclick="doAuth()" class="btn-p">GET STARTED</button>
+    <div id="view-home">
+        <div class="header-top">
+            <div><p style="color:#a0aec0; font-size:12px;">NAMASTE</p><h1 id="user-display">Prakash</h1></div>
+            <div style="font-size: 24px;">🔍</div>
         </div>
+
+        <div class="stats-row">
+            <div class="stat-box"><h3>5</h3><p>Exams</p></div>
+            <div class="stat-box"><h3>22</h3><p>Sections</p></div>
+            <div class="stat-box"><h3>80+</h3><p>Subjects</p></div>
+        </div>
+
+        <div class="section-title"><h2>All Exams</h2> <span style="color:orange; font-size:12px;">● 2026-27</span></div>
+        
+        <div class="exam-list" id="render-main">
+            </div>
     </div>
 
-    <div id="view-student" class="hidden">
-        <div class="header">
-            <p style="font-size: 14px; opacity: 0.8;">Welcome Back,</p>
-            <h2 id="user-name-display">Student</h2>
+    <div id="view-detail" class="overlay">
+        <div class="sub-header" id="overlay-head">
+            <div onclick="closeDetail()" style="font-size:25px; margin-bottom:20px;">←</div>
+            <h1 id="det-title">UPSC</h1>
+            <p id="det-full-name" style="opacity:0.8;"></p>
         </div>
-        <div style="padding: 20px; padding-bottom: 100px;">
-            <h4 style="margin-bottom: 15px; color: #64748b;">Explore Your Courses</h4>
-            <div id="main-exam-list"></div>
-        </div>
-        <nav>
-            <div class="nav-item active" onclick="location.reload()">🏠<br>Home</div>
-            <div class="nav-item" onclick="showLogs()">📅<br>History</div>
-            <div class="nav-item" onclick="doLogout()">👤<br>Logout</div>
-        </nav>
+        <h3 style="padding: 20px 20px 10px 20px;">Exam Sections</h3>
+        <div id="render-sections"></div>
     </div>
 
-    <div id="view-admin" class="hidden" style="padding: 20px; padding-bottom: 100px;">
-        <div class="header" style="border-radius: 20px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
-            <h3>Admin Hub</h3>
-            <button onclick="doLogout()" style="color:white; background:none; border:none; font-weight:bold;">LOGOUT</button>
-        </div>
-        <div class="card">
-            <h4>Add/Update Exam Tree</h4>
-            <input type="text" id="adm-name" class="input-d" placeholder="Exam Name (e.g. CGL)">
-            <input type="text" id="adm-parent" class="input-d" placeholder="Parent Category (e.g. SSC)">
-            <input type="text" id="adm-secs" class="input-d" placeholder="Stages (Tier 1, Tier 2)">
-            <button onclick="saveToFirebase()" class="btn-p">SYNC DATA</button>
-        </div>
-        <div id="adm-render-list"></div>
-    </div>
-
-    <div id="view-sub" class="hidden overlay">
-        <div onclick="this.parentElement.classList.add('hidden')" style="color: var(--primary); font-weight: 700; margin-bottom: 20px; cursor: pointer;">← BACK</div>
-        <h2 id="sub-page-title" style="margin-bottom: 20px; border-left: 5px solid var(--secondary); padding-left: 12px; color: var(--primary);"></h2>
-        <div id="sub-page-render"></div>
-    </div>
+    <nav>
+        <div onclick="location.reload()" style="text-align:center;">🏠<br><small>Home</small></div>
+        <div style="text-align:center; color:#6b7280;">🔖<br><small>Bookmarks</small></div>
+        <div onclick="logout()" style="text-align:center; color:#6b7280;">👤<br><small>Profile</small></div>
+    </nav>
 
     <script>
         const firebaseConfig = {
@@ -99,114 +97,91 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 🛡️ AD-KILLER
-        setInterval(() => {
-            document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, div[style*="fixed"]').forEach(el => {
-                if(!el.id.includes('view-')) el.remove();
-            });
-        }, 100);
-
-        // 🏗️ INITIAL DATA (Agar Firebase khali ho)
-        const initialData = {
-            "SSC": { name: "SSC", parent: "", stages: "CGL, CHSL, MTS, CPO" },
-            "CGL": { name: "CGL", parent: "SSC", stages: "Tier 1, Tier 2" },
-            "CHSL": { name: "CHSL", parent: "SSC", stages: "LDC, DEO" },
-            "UPSC": { name: "UPSC", parent: "", stages: "IAS, IPS, IRS" },
-            "IAS": { name: "IAS", parent: "UPSC", stages: "Prelims, Mains, Interview" },
-            "Railway": { name: "Railway", parent: "", stages: "NTPC, Group D, ALP" },
-            "Banking": { name: "Banking", parent: "", stages: "SBI PO, IBPS Clerk" },
-            "Defence": { name: "Defence", parent: "", stages: "NDA, CDS, AFCAT" }
-        };
-
-        function doAuth() {
-            const name = document.getElementById('user-in').value.trim();
-            if(!name) return;
-            if(name.toLowerCase() !== 'admin123') {
-                db.ref('logs/' + name.replace(/\s/g,'_')).push({ time: new Date().toLocaleString() });
-            }
-            localStorage.setItem('study_user', name);
-            location.reload();
-        }
-
-        window.onload = () => {
-            const user = localStorage.getItem('study_user');
-            if(!user) return;
-            document.getElementById('view-login').classList.add('hidden');
-            if(user.toLowerCase() === 'admin123') {
-                document.getElementById('view-admin').classList.remove('hidden');
-                initAdmin();
-            } else {
-                document.getElementById('view-student').classList.remove('hidden');
-                document.getElementById('user-name-display').innerText = user;
-                initStudent();
+        // 🏗️ DATA STRUCTURE (As per Image 1000005430/31)
+        const masterData = {
+            "UPSC": {
+                name: "UPSC", fullName: "Union Public Service Commission", 
+                desc: "Civil Services, IAS, IPS, IFS and more", posts: "1200+ Posts", color: "blue-card",
+                sections: [
+                    { title: "Prelims", sub: "Preliminary Examination", tags: ["GS Paper I", "CSAT Paper II"] },
+                    { title: "Mains", sub: "Main Examination (Written)", tags: ["Essay", "GS Paper I", "GS Paper II", "Optional I"] },
+                    { title: "Interview", sub: "Personality Test / Interview", tags: ["Personality Test"] }
+                ]
+            },
+            "SSC": {
+                name: "SSC", fullName: "Staff Selection Commission", 
+                desc: "CGL, CHSL, MTS, GD, CPO and more", posts: "10000+ Posts", color: "purple-card",
+                sections: [
+                    { title: "SSC CGL", sub: "Combined Graduate Level", tags: ["Tier I", "Tier II"] },
+                    { title: "SSC CHSL", sub: "Combined Higher Secondary Level", tags: ["Tier I", "Tier II"] },
+                    { title: "SSC MTS", sub: "Multi Tasking Staff", tags: ["Session I", "Session II"] }
+                ]
+            },
+            "Railway": {
+                name: "Railway", fullName: "Railway Recruitment Board", 
+                desc: "NTPC, Group D, ALP, RPF and more", posts: "15000+ Posts", color: "green-card",
+                sections: [
+                    { title: "CBT 1", sub: "Common Test", tags: ["Maths", "Reasoning", "GA"] },
+                    { title: "CBT 2", sub: "Stage 2 Exam", tags: ["Technical", "General Science"] }
+                ]
             }
         };
 
-        function initStudent() {
-            db.ref('exams').on('value', s => {
-                let data = s.val();
-                if(!data) { 
-                    db.ref('exams').set(initialData); 
-                    data = initialData;
-                }
-                const list = document.getElementById('main-exam-list');
-                list.innerHTML = '';
-                for(let k in data) {
-                    if(!data[k].parent) {
-                        list.innerHTML += `<div class="exam-item" onclick="openNode('${k}')"><span>${data[k].name}</span> <span>➔</span></div>`;
-                    }
-                }
-            });
-        }
-
-        function openNode(id) {
-            db.ref('exams').once('value', s => {
-                const all = s.val();
-                const node = all[id];
-                const overlay = document.getElementById('view-sub');
-                document.getElementById('sub-page-title').innerText = node.name;
-                const render = document.getElementById('sub-page-render');
-                render.innerHTML = '';
-
-                // Show Children (e.g., SSC -> CGL)
-                for(let k in all) {
-                    if(all[k].parent === node.name) {
-                        render.innerHTML += `<div class="exam-item" onclick="openNode('${k}')"><span>${all[k].name}</span> <span>➔</span></div>`;
-                    }
-                }
-
-                // Show Final Stages (e.g., CGL -> Tier 1)
-                if(node.stages) {
-                    node.stages.split(',').forEach(stage => {
-                        render.innerHTML += `<div class="card" style="border-left:4px solid var(--primary); font-weight:bold;">📖 ${stage.trim()}</div>`;
-                    });
-                }
-                overlay.classList.remove('hidden');
-            });
-        }
-
-        function saveToFirebase() {
-            const n = document.getElementById('adm-name').value;
-            const p = document.getElementById('adm-parent').value;
-            const s = document.getElementById('adm-secs').value;
-            if(!n) return;
-            db.ref('exams/' + n).update({ name: n, parent: p, stages: s }).then(() => location.reload());
-        }
-
-        function initAdmin() {
-            db.ref('exams').on('value', s => {
-                const render = document.getElementById('adm-render-list');
-                render.innerHTML = '<h4 style="margin:20px 0 10px 0;">Manage Database</h4>';
-                s.forEach(child => {
-                    render.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <span><b>${child.val().name}</b><br><small>${child.val().parent || 'Main'}</small></span>
-                        <button onclick="db.ref('exams/${child.key}').remove()" style="color:red; border:none; background:none; font-weight:bold;">DEL</button>
+        function renderDashboard() {
+            const list = document.getElementById('render-main');
+            list.innerHTML = '';
+            for(let key in masterData) {
+                const ex = masterData[key];
+                list.innerHTML += `
+                    <div class="exam-card ${ex.color}" onclick="openDetail('${key}')">
+                        <div class="post-tag">${ex.posts}</div>
+                        <div class="exam-name">${ex.name}</div>
+                        <p class="exam-desc">${ex.desc}</p>
+                        <div class="exam-footer">📚 ${ex.sections.length} Sections <span>➔</span></div>
                     </div>`;
-                });
-            });
+            }
         }
 
-        function doLogout() { localStorage.removeItem('study_user'); location.reload(); }
+        function openDetail(key) {
+            const ex = masterData[key];
+            const overlay = document.getElementById('view-detail');
+            const head = document.getElementById('overlay-head');
+            
+            // Set Color Theme
+            head.className = `sub-header ${ex.color}`;
+            document.getElementById('det-title').innerText = ex.name;
+            document.getElementById('det-full-name').innerText = ex.fullName;
+            
+            const render = document.getElementById('render-sections');
+            render.innerHTML = '';
+            ex.sections.forEach((s, index) => {
+                let tagsHtml = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+                render.innerHTML += `
+                    <div class="section-box" style="border-color: ${ex.color.includes('blue') ? '#2563eb' : '#8b5cf6'}">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span style="background:#2d3748; padding:2px 8px; border-radius:5px; font-size:12px;">${index+1}</span>
+                                <div><strong>${s.title}</strong><br><small style="color:#a0aec0">${s.sub}</small></div>
+                            </div>
+                            <div class="tag-row">${tagsHtml}</div>
+                        </div>
+                        <div style="color:#4a5568">➔</div>
+                    </div>`;
+            });
+            overlay.style.display = 'block';
+        }
+
+        function closeDetail() { document.getElementById('view-detail').style.display = 'none'; }
+        
+        window.onload = () => {
+            const user = localStorage.getItem('study_user') || 'Prakash';
+            document.getElementById('user-display').innerText = user;
+            renderDashboard();
+            // Auto-Sync to Firebase for Admin reference
+            db.ref('master_exams_v2').set(masterData);
+        };
+
+        function logout() { localStorage.removeItem('study_user'); location.reload(); }
     </script>
 </body>
 </html>
