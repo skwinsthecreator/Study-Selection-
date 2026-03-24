@@ -3,95 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Selection Premium</title>
+    <title>Study Selection Ultra</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-dark: #0a1122; --card-dark: #121e36; --text-white: #f1f5f9; --text-gray: #94a3b8; --upsc-grad: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); --ssc-grad: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); --teach-grad: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); --rail-grad: linear-gradient(135deg, #10b981 0%, #059669 100%); --state-grad: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); --accent: #f97316; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg-dark); color: var(--text-white); font-size: 14px; overflow-x: hidden; }
-        .hidden { display: none !important; }
-        .btn { padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; border: none; transition: 0.2s; }
-        .btn-primary { background: var(--accent); color: white; width: 100%; }
-        .input-dark { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: white; border-radius: 8px; border: none; margin-bottom: 15px; }
-        .card { background: var(--card-dark); padding: 20px; border-radius: 20px; margin-bottom: 15px; }
-
-        /* Login */
-        #login-screen { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle, #1e3a8a, #0a1122); }
-        .login-card { background: var(--card-dark); padding: 40px; border-radius: 24px; text-align: center; width: 90%; max-width: 380px; }
-
-        /* Dashboard */
-        .premium-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 20px; }
-        .profile-icon { width: 45px; height: 45px; background: var(--card-dark); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--accent); border: 2px solid #2a4066; font-weight: bold; }
-        .notice-box { background: rgba(249, 115, 22, 0.1); border: 1px dashed var(--accent); padding: 15px; border-radius: 15px; margin: 0 20px 20px 20px; color: var(--accent); font-weight: 600; text-align: center; }
+        :root { --bg: #0a1122; --card: #121e36; --text: #f1f5f9; --gray: #94a3b8; --accent: #f97316; --upsc: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); --ssc: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
+        .light-mode { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --gray: #64748b; }
         
-        .exam-grid { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
-        .exam-card { padding: 22px; border-radius: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: transform 0.2s; }
-        .exam-info h3 { font-size: 18px; margin-bottom: 2px; }
-        .exam-info p { font-size: 11px; opacity: 0.8; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background 0.3s; }
+        body { background: var(--bg); color: var(--text); font-size: 14px; overflow-x: hidden; }
+        .hidden { display: none !important; }
+        .btn { padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 600; border: none; }
+        .btn-p { background: var(--accent); color: white; width: 100%; }
+        .input-d { width: 100%; padding: 12px; background: rgba(128,128,128,0.1); color: var(--text); border-radius: 10px; border: 1px solid rgba(128,128,128,0.2); margin-bottom: 10px; }
+        .card { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(128,128,128,0.1); }
 
-        /* Section View */
-        .sub-exam-view { padding: 20px; }
-        .section-header { padding: 30px 20px; border-radius: 20px; margin-bottom: 25px; }
-        .section-card { background: var(--card-dark); padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; }
-        .section-num { width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 8px; display: flex; justify-content: center; align-items: center; color: var(--accent); font-weight: bold; }
+        /* News Ticker */
+        .ticker-wrap { background: #ef4444; color: white; padding: 5px 0; overflow: hidden; white-space: nowrap; font-size: 12px; font-weight: bold; }
+        .ticker { display: inline-block; animation: ticker 20s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* Screens */
+        #login-screen { height: 100vh; display: flex; justify-content: center; align-items: center; background: var(--bg); }
+        .login-box { background: var(--card); padding: 40px; border-radius: 24px; text-align: center; width: 90%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+
+        /* Header */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        .profile { width: 45px; height: 45px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; }
+
+        /* Exam Grid */
+        .grid { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
+        .e-card { padding: 20px; border-radius: 18px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        
+        /* Quiz Section */
+        .quiz-box { border-left: 4px solid var(--accent); }
+        .quiz-option { display: block; background: rgba(128,128,128,0.1); padding: 10px; margin: 5px 0; border-radius: 8px; cursor: pointer; }
 
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--card-dark); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); }
+        nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--card); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(128,128,128,0.1); }
     </style>
 </head>
 <body>
 
+    <div class="ticker-wrap"><div class="ticker" id="live-ticker">Breaking News: New Study Material Added for UPSC Prelims! Stay Tuned.</div></div>
+
     <div id="login-screen">
-        <div class="login-card">
-            <h2 style="margin-bottom:10px;">नमस्ते</h2>
-            <p style="color:var(--text-gray); margin-bottom:20px;">Ready for your career?</p>
-            <input type="text" id="user-id" class="input-dark" placeholder="अपना नाम या Admin ID लिखें">
-            <button onclick="login()" class="btn btn-primary">Start Learning</button>
+        <div class="login-box">
+            <h2 style="margin-bottom:10px;">Study Selection</h2>
+            <p style="color:var(--gray); margin-bottom:20px;">Quality Education for All</p>
+            <input type="text" id="user-id" class="input-d" placeholder="Enter Your Name">
+            <button onclick="doLogin()" class="btn btn-p">Procced to Study</button>
         </div>
     </div>
 
-    <div id="student-screen" class="hidden" style="padding-bottom: 80px;">
-        <div id="dashboard-view">
-            <header class="premium-header">
-                <div><p style="font-size:12px; color:var(--text-gray);">WELCOME,</p><h2 id="greet-name">Student</h2></div>
-                <div class="profile-icon" id="profile-init">S</div>
-            </header>
+    <div id="stu-screen" class="hidden" style="padding-bottom: 80px;">
+        <header>
+            <div><p style="font-size:12px; color:var(--gray);">HELLO,</p><h2 id="greet">Student</h2></div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="toggleTheme()" style="background:none; border:none; font-size:20px; cursor:pointer;">🌓</button>
+                <div class="profile" id="p-icon">S</div>
+            </div>
+        </header>
+
+        <div class="grid">
+            <div class="card quiz-box">
+                <h4>🧠 Quiz of the Day</h4>
+                <p id="q-txt" style="font-size:13px; margin:5px 0;">Loading Question...</p>
+                <div id="q-opt"></div>
+            </div>
+
+            <h3>Exam Categories</h3>
+            <div id="exam-container" class="grid" style="padding:0;"></div>
             
-            <div id="stu-notice" class="notice-box">📢 No new updates.</div>
-
-            <div style="padding: 0 20px 20px 20px;"><h2 style="font-size:20px;">Select Your Exam</h2></div>
-            <div class="exam-grid" id="main-exam-list"></div>
-
-            <div id="video-display" style="padding: 20px;"></div>
+            <div id="v-area" style="margin-top:10px;"></div>
+            <div id="n-area" style="margin-top:10px;"></div>
         </div>
 
-        <div id="section-view" class="hidden sub-exam-view">
-            <div onclick="backToDash()" style="margin-bottom:20px; color:var(--text-gray); cursor:pointer;">← Back to Home</div>
-            <div id="section-content"></div>
-        </div>
-
-        <nav class="bottom-nav">
-            <div onclick="backToDash()" style="color:var(--accent); cursor:pointer; text-align:center;">🏠<br>Home</div>
-            <div onclick="logout()" style="color:var(--text-gray); cursor:pointer; text-align:center;">👤<br>Logout</div>
+        <nav>
+            <div onclick="location.reload()" style="text-align:center; color:var(--accent);">🏠<br>Home</div>
+            <div onclick="doLogout()" style="text-align:center; color:var(--gray);">👤<br>Logout</div>
         </nav>
     </div>
 
-    <div id="admin-screen" class="hidden" style="padding:20px;">
-        <h2 style="margin-bottom:20px; color:var(--accent);">Admin Panel</h2>
-        <div class="card">
-            <h3>📢 Post Global Notice</h3>
-            <input type="text" id="admin-note" class="input-dark" placeholder="Update something...">
-            <button onclick="updateNotice()" class="btn btn-primary">Update Notice</button>
+    <div id="adm-screen" class="hidden" style="padding:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>Admin Panel</h2>
+            <button onclick="doLogout()" class="btn" style="background:red; color:white;">Logout</button>
         </div>
         <div class="card">
-            <h3>📹 Post Video Class</h3>
-            <input type="text" id="v-name" class="input-dark" placeholder="Chapter Name">
-            <input type="text" id="v-id" class="input-dark" placeholder="YouTube Video ID">
-            <button onclick="updateVideo()" class="btn btn-primary">Publish Video</button>
+            <h4>📢 Update News Ticker</h4>
+            <input type="text" id="t-input" class="input-d" placeholder="Enter scrolling news">
+            <button onclick="setD('ticker', document.getElementById('t-input').value)" class="btn btn-p">Update</button>
         </div>
-        <button onclick="logout()" class="btn" style="background:#dc2626; color:white; width:100%;">Exit Admin Mode</button>
+        <div class="card">
+            <h4>📹 Video & 📄 PDF Note</h4>
+            <input type="text" id="v-ti" class="input-d" placeholder="Topic Title">
+            <input type="text" id="v-li" class="input-d" placeholder="YouTube Video ID">
+            <input type="text" id="p-li" class="input-d" placeholder="PDF Google Drive Link">
+            <button onclick="saveCon()" class="btn btn-p">Publish Both</button>
+        </div>
+        <div class="card">
+            <h4>📊 Active Students</h4>
+            <div id="stu-list" style="font-size:12px; color:var(--gray);">No data yet.</div>
+        </div>
     </div>
 
     <script>
@@ -107,9 +122,79 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const examData = {
-            "upsc": { name: "UPSC", desc: "Civil Services, IAS, IPS, IFS", grad: "var(--upsc-grad)", sections: ["Prelims (GS + CSAT)", "Mains (GS 1-4 + Optional)", "Interview Preparation"] },
-            "ssc": { name: "SSC", desc: "CGL, CHSL, MTS, GD Constable", grad: "var(--ssc-grad)", sections: ["SSC CGL (Tier 1 & 2)", "SSC CHSL (10+2)", "SSC MTS / GD"] },
-            "teaching": { name: "Teaching", desc: "CTET, UPTET, Super TET, KVS", grad: "var(--teach-grad)", sections: ["CTET (Paper 1 & 2)", "State TET Exams", "Super TET / KVS"] },
-            "railway": { name: "Railway", desc: "RRB NTPC, Group D, ALP", grad: "var(--rail-grad)", sections: ["RRB NTPC (CBT 1 & 2)", "RRB Group D", "RRB ALP / Technician"] },
-            "
+        const exams = [
+            {n:"UPSC", d:"IAS, IPS, IFS Stages", g:"var(--upsc)"},
+            {n:"SSC", d:"CGL, CHSL, MTS", g:"var(--ssc)"},
+            {n:"Teaching", d:"CTET, UPTET, KVS", g:"linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"},
+            {n:"Railway", d:"RRB NTPC, Group D", g:"linear-gradient(135deg, #10b981 0%, #059669 100%)"}
+        ];
+
+        function doLogin() {
+            const id = document.getElementById('user-id').value;
+            if(!id) return alert("Name please!");
+            localStorage.setItem('studyU', id);
+            if(id.toLowerCase() !== 'admin123') db.ref('stats/'+id.replace(/\s/g,'_')).set({lastLogin: new Date().toLocaleString()});
+            location.reload();
+        }
+
+        window.onload = () => {
+            const u = localStorage.getItem('studyU');
+            if(!u) return;
+            document.getElementById('login-screen').classList.add('hidden');
+            if(u.toLowerCase() === 'admin123') {
+                document.getElementById('adm-screen').classList.remove('hidden');
+                loadAdm();
+            } else {
+                document.getElementById('stu-screen').classList.remove('hidden');
+                document.getElementById('greet').innerText = u;
+                document.getElementById('p-icon').innerText = u[0].toUpperCase();
+                loadEx(); loadStu();
+            }
+        };
+
+        function loadEx() {
+            let h = '';
+            exams.forEach(e => {
+                h += `<div class="e-card" style="background:${e.g}" onclick="alert('Accessing ${e.n} Study Material...')"><div><h4>${e.n}</h4><p style="font-size:10px;">${e.d}</p></div><span>→</span></div>`;
+            });
+            document.getElementById('exam-container').innerHTML = h;
+        }
+
+        function saveCon() {
+            const t = document.getElementById('v-ti').value;
+            const v = document.getElementById('v-li').value;
+            const p = document.getElementById('p-li').value;
+            db.ref('appData').update({vTitle:t, vId:v, pdf:p}).then(()=>alert("Content Live!"));
+        }
+
+        function setD(path, val) { db.ref('appData/'+path).set(val).then(()=>alert("Updated!")); }
+
+        function loadStu() {
+            db.ref('appData/ticker').on('value', s => { if(s.val()) document.getElementById('live-ticker').innerText = s.val(); });
+            db.ref('appData').on('value', s => {
+                const d = s.val();
+                if(d.vId) {
+                    document.getElementById('v-area').innerHTML = `<h3>Latest Class</h3><div class="card"><h4>${d.vTitle}</h4><iframe width="100%" height="200" src="https://www.youtube.com/embed/${d.vId}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:10px;"></iframe></div>`;
+                }
+                if(d.pdf) {
+                    document.getElementById('n-area').innerHTML = `<div class="card" style="background:var(--accent); color:white; text-align:center;"><h4>Download PDF Notes</h4><a href="${d.pdf}" target="_blank" style="color:white; text-decoration:underline;">Click here to Open</a></div>`;
+                }
+            });
+            // Fake Quiz Logic for Demo
+            document.getElementById('q-txt').innerText = "Which Article of the Constitution deals with Article 1?";
+            document.getElementById('q-opt').innerHTML = `<div class="quiz-option" onclick="alert('Correct!')">Name and territory of the Union</div><div class="quiz-option" onclick="alert('Try Again')">Citizenship</div>`;
+        }
+
+        function loadAdm() {
+            db.ref('stats').on('value', s => {
+                let h = '';
+                s.forEach(c => { h += `• ${c.key.replace(/_/g,' ')} (Active: ${c.val().lastLogin})<br>`; });
+                document.getElementById('stu-list').innerHTML = h || "No active students.";
+            });
+        }
+
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        function doLogout() { localStorage.removeItem('studyU'); location.reload(); }
+    </script>
+</body>
+</html>
