@@ -3,134 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Selection - Premium Academy</title>
+    <title>Study Selection - Pro Academy</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0a1122; --card: #121e36; --text: #f1f5f9; --gray: #94a3b8; --accent: #f97316; --upsc: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); --ssc: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); --green: #10b981; }
+        /* Anti-Ad Overlay Styling */
+        iframe[id*="google_ads"], div[class*="adsbygoogle"], .appgeyser-ad-unit { display: none !important; visibility: hidden !important; height: 0 !important; }
+        
+        :root { --bg: #0a1122; --card: #121e36; --text: #f1f5f9; --gray: #94a3b8; --accent: #f97316; --upsc: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); --ssc: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-size: 14px; overflow-x: hidden; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; min-height: 100vh; }
         .hidden { display: none !important; }
         
-        /* Premium UI Components */
-        #app-toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 12px 30px; border-radius: 50px; z-index: 5000; display: none; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.2); }
+        /* Toast & UI */
+        #app-toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 12px 30px; border-radius: 50px; z-index: 9999; display: none; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .btn { padding: 14px; border-radius: 15px; cursor: pointer; font-weight: 600; border: none; transition: 0.3s; text-align: center; }
-        .btn-p { background: var(--accent); color: white; width: 100%; display: block; box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3); }
-        .input-d { width: 100%; padding: 15px; background: rgba(255,255,255,0.05); color: white; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; outline: none; font-size: 15px; }
+        .btn-p { background: var(--accent); color: white; width: 100%; display: block; }
+        .input-d { width: 100%; padding: 15px; background: rgba(255,255,255,0.05); color: white; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; outline: none; }
         .card { background: var(--card); padding: 22px; border-radius: 24px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Ticker */
-        .ticker-wrap { background: #dc2626; color: white; padding: 8px 0; overflow: hidden; white-space: nowrap; font-size: 12px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        /* Navigation & Ticker */
+        .ticker-wrap { background: #dc2626; color: white; padding: 8px 0; overflow: hidden; white-space: nowrap; font-size: 12px; }
         .ticker { display: inline-block; animation: ticker 25s linear infinite; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* Navigation */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 25px 20px; }
-        .profile-icon { width: 48px; height: 48px; background: var(--card); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid #2a4066; color: var(--accent); font-weight: bold; font-size: 18px; }
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; padding-bottom: 5px; }
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
 
         /* Exam Grid */
         .grid { padding: 0 20px; }
-        .e-card { padding: 25px; border-radius: 22px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
-        .e-card:active { transform: scale(0.97); }
-
-        /* Sub Page Navigation */
-        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; padding-bottom: 100px; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .s-header { padding: 45px 25px; border-radius: 28px; margin-bottom: 25px; color: white; position: relative; overflow: hidden; }
-        .s-item { background: var(--card); padding: 20px; border-radius: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.03); }
-        .s-num { width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--accent); font-weight: bold; }
-
-        /* Admin Tabs */
-        .adm-tabs { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; background: var(--card); }
-        .tab-btn { background: rgba(255,255,255,0.05); color: var(--gray); padding: 10px 22px; border-radius: 30px; white-space: nowrap; font-size: 13px; cursor: pointer; }
-        .tab-btn.active { background: var(--accent); color: white; }
+        .e-card { padding: 25px; border-radius: 22px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
     </style>
 </head>
 <body>
 
     <div id="app-toast">Success!</div>
-    <div class="ticker-wrap"><div class="ticker" id="app-ticker">Loading updates... Please wait.</div></div>
+    <div class="ticker-wrap"><div class="ticker" id="app-ticker">Preparing for SSC & UPSC? Check out the latest material below!</div></div>
 
     <div id="view-login" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
-        <div class="card" style="width: 100%; max-width: 400px; text-align: center; padding: 45px 30px;">
-            <h1 style="color:var(--accent); font-size: 32px; letter-spacing: -1px;">Study Selection</h1>
-            <p style="color:var(--gray); margin-bottom: 35px;">Empowering Future Officers</p>
-            <input type="text" id="user-name" class="input-d" placeholder="Enter Name or Admin ID">
-            <button onclick="handleLogin()" class="btn btn-p">Enter Academy</button>
+        <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
+            <h1 style="color:var(--accent); font-size: 30px;">Study Selection</h1>
+            <p style="color:var(--gray); margin-bottom: 30px;">Premium Dashboard</p>
+            <input type="text" id="user-name" class="input-d" placeholder="Enter Name or admin123">
+            <button onclick="handleLogin()" class="btn btn-p">Login</button>
         </div>
     </div>
 
     <div id="view-student" class="hidden" style="padding-bottom: 90px;">
-        <header>
-            <div><p style="font-size:11px; color:var(--gray); letter-spacing: 1px;">WELCOME BACK</p><h2 id="display-name">Student</h2></div>
-            <div class="profile-icon" id="display-init">S</div>
+        <header style="padding: 25px 20px; display:flex; justify-content:space-between; align-items:center;">
+            <div><h2 id="display-name">Student</h2></div>
+            <div style="color:var(--accent); font-weight:bold;" onclick="doLogout()">LOGOUT</div>
         </header>
 
-        <div class="card" style="margin: 0 20px 25px 20px; border-left: 5px solid var(--accent); background: linear-gradient(to right, #121e36, #0a1122);">
-            <h4 style="color:var(--accent)">🎯 Quiz of the Day</h4>
-            <p style="font-size:13px; margin: 12px 0; line-height: 1.5;">"India, that is Bharat, shall be a Union of States." Which Article of Constitution says this?</p>
-            <div style="display:flex; gap:12px;">
-                <button class="btn" onclick="showToast('✅ Correct! Article 1')" style="background:rgba(255,255,255,0.05); color:white; font-size:12px; flex:1;">Article 1</button>
-                <button class="btn" onclick="showToast('❌ Wrong! Try Article 1')" style="background:rgba(255,255,255,0.05); color:white; font-size:12px; flex:1;">Article 12</button>
-            </div>
-        </div>
-
-        <div style="padding: 0 20px 15px 20px;"><h3 style="font-size: 20px;">Exam Library</h3></div>
+        <div style="padding: 0 20px 15px 20px;"><h3>Exam Categories</h3></div>
         <div id="exam-render" class="grid"></div>
         <div id="broadcast-render" style="padding: 20px;"></div>
 
         <nav>
-            <div onclick="location.reload()" style="text-align:center; color:var(--accent); cursor:pointer;">🏠<br><span style="font-size:10px;">Home</span></div>
-            <div onclick="showToast('Loading Library...')" style="text-align:center; color:var(--gray); cursor:pointer;">📚<br><span style="font-size:10px;">Library</span></div>
-            <div onclick="doLogout()" style="text-align:center; color:var(--gray); cursor:pointer;">👤<br><span style="font-size:10px;">Logout</span></div>
+            <div onclick="location.reload()" style="text-align:center; color:var(--accent);">🏠<br>Home</div>
+            <div onclick="doLogout()" style="text-align:center; color:var(--gray);">👤<br>Logout</div>
         </nav>
     </div>
 
     <div id="view-admin" class="hidden">
-        <header style="background:var(--card); padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            <h2 style="color:var(--accent)">Admin Control</h2>
-            <button onclick="doLogout()" style="background:none; border:none; color:red; font-weight:bold; cursor:pointer;">LOGOUT</button>
+        <header style="background:var(--card); padding: 20px; display:flex; justify-content:space-between;">
+            <h2 style="color:var(--accent)">Admin Hub</h2>
+            <button onclick="doLogout()" style="color:red; background:none; border:none; font-weight:bold;">EXIT</button>
         </header>
 
-        <div class="adm-tabs">
-            <div class="tab-btn active" onclick="switchTab('adm-exams-page')">🏗️ Exams</div>
-            <div class="tab-btn" onclick="switchTab('adm-live-page')">📢 Live Updates</div>
-            <div class="tab-btn" onclick="switchTab('adm-logs-page')">📊 Logs</div>
-        </div>
-
-        <div id="adm-exams-page" class="adm-content" style="padding: 20px;">
+        <div style="padding: 20px;">
             <div class="card">
-                <h4>Manage Categories</h4>
-                <input type="text" id="in-ex-name" class="input-d" placeholder="Exam Name (e.g. UPSC)">
-                <input type="text" id="in-ex-desc" class="input-d" placeholder="Short Desc">
-                <input type="text" id="in-ex-secs" class="input-d" placeholder="Stages (comma separated)">
-                <button onclick="adminAddExam()" class="btn btn-p">Add/Update Exam</button>
+                <h4>Add/Edit Exam</h4>
+                <input type="text" id="in-ex-name" class="input-d" placeholder="Exam Name (e.g. SSC)">
+                <input type="text" id="in-ex-desc" class="input-d" placeholder="Short Description">
+                <input type="text" id="in-ex-secs" class="input-d" placeholder="Stages (e.g. CGL, CHSL, MTS)">
+                <button onclick="adminAddExam()" class="btn btn-p">Save & Sync</button>
             </div>
             <div id="adm-exams-list"></div>
-        </div>
-
-        <div id="adm-live-page" class="adm-content hidden" style="padding: 20px;">
-            <div class="card">
-                <input type="text" id="in-ticker" class="input-d" placeholder="News Ticker Text">
-                <button onclick="dbWrite('live/ticker', document.getElementById('in-ticker').value)" class="btn btn-p">Update Ticker</button>
-            </div>
-            <div class="card">
-                <input type="text" id="in-v-title" class="input-d" placeholder="Video Class Title">
-                <input type="text" id="in-v-id" class="input-d" placeholder="YouTube Video ID">
-                <input type="text" id="in-pdf" class="input-d" placeholder="Google Drive PDF Link">
-                <button onclick="adminPublishMedia()" class="btn btn-p">Publish to Students</button>
-            </div>
-        </div>
-
-        <div id="adm-logs-page" class="adm-content hidden" style="padding: 20px;">
-            <div class="card" id="history-logs" style="font-size:11px; max-height: 500px; overflow-y: auto;">Loading...</div>
+            <div class="card" id="history-logs" style="font-size:11px; margin-top:20px;">Logs loading...</div>
         </div>
     </div>
 
     <div id="view-sections" class="hidden full-page">
-        <div onclick="this.parentElement.classList.add('hidden')" style="margin-bottom:25px; color:var(--gray); cursor:pointer; font-weight:bold; display:flex; align-items:center;">← BACK TO DASHBOARD</div>
+        <div onclick="this.parentElement.classList.add('hidden')" style="margin-bottom:20px; color:var(--gray); font-weight:bold; cursor:pointer;">← BACK</div>
         <div id="sections-render"></div>
     </div>
 
@@ -147,6 +102,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // ANTI-AD LOGIC (Runs every 2 seconds)
+        setInterval(() => {
+            const ads = document.querySelectorAll('iframe, .appgeyser-ad-unit, [id*="ads"]');
+            ads.forEach(ad => ad.remove());
+        }, 2000);
+
         function showToast(msg) {
             const t = document.getElementById('app-toast');
             t.innerText = msg; t.style.display = 'block';
@@ -155,7 +116,7 @@
 
         function handleLogin() {
             const name = document.getElementById('user-name').value.trim();
-            if(!name) { showToast("Enter your name!"); return; }
+            if(!name) return;
             localStorage.setItem('activeSession', name);
             if(name.toLowerCase() !== 'admin123') {
                 db.ref('attendance/' + name.replace(/\s/g,'_')).push({ time: new Date().toLocaleString() });
@@ -166,7 +127,6 @@
         window.onload = () => {
             const user = localStorage.getItem('activeSession');
             if(!user) return;
-
             document.getElementById('view-login').classList.add('hidden');
             if(user.toLowerCase() === 'admin123') {
                 document.getElementById('view-admin').classList.remove('hidden');
@@ -174,43 +134,38 @@
             } else {
                 document.getElementById('view-student').classList.remove('hidden');
                 document.getElementById('display-name').innerText = user;
-                document.getElementById('display-init').innerText = user[0].toUpperCase();
                 initStudentView();
             }
         };
 
         const defaultExams = {
-            "UPSC": {name:"UPSC", desc:"Civil Services (IAS, IPS, IFS)", sections:"Prelims, Mains, Personality Test"},
-            "SSC": {name:"SSC", desc:"CGL, CHSL, MTS & Others", sections:"Tier 1, Tier 2, Skill Test"},
-            "Railway": {name:"Railway", desc:"RRB NTPC, Group D, ALP", sections:"CBT 1, CBT 2, Document Verification"},
-            "Teaching": {name:"Teaching", desc:"CTET, KVS, State TETs", sections:"Paper 1, Paper 2, Interview"},
-            "Police": {name:"Police", desc:"State Police SI & Constable", sections:"Written Test, Physical, Medical"}
+            "SSC": {name:"SSC", desc:"Staff Selection Commission", sections:"CGL, CHSL, MTS, GD Constable, CPO, Stenographer"},
+            "UPSC": {name:"UPSC", desc:"Civil Services Examination", sections:"Prelims, Mains, Interview"},
+            "Teaching": {name:"Teaching", desc:"CTET & State TETs", sections:"Paper 1, Paper 2"},
+            "Police": {name:"Police", desc:"State Constable & SI", sections:"Written, Physical, Medical"}
         };
 
         function initStudentView() {
             db.ref('exams').on('value', s => {
-                const data = s.val();
-                if(!data) { db.ref('exams').set(defaultExams); return; }
+                const data = s.val() || defaultExams;
                 const container = document.getElementById('exam-render');
                 container.innerHTML = '';
                 for(let k in data) {
                     const ex = data[k];
-                    let grad = ex.name.includes('UPSC') ? 'var(--upsc)' : ex.name.includes('SSC') ? 'var(--ssc)' : 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
-                    container.innerHTML += `<div class="e-card" style="background:${grad}" onclick="openExSections('${k}')"><div><h3>${ex.name}</h3><p style="font-size:11px; opacity:0.8;">${ex.desc}</p></div><div style="margin-left:auto; font-size:20px;">→</div></div>`;
+                    let grad = ex.name.includes('SSC') ? 'var(--ssc)' : 'var(--upsc)';
+                    container.innerHTML += `<div class="e-card" style="background:${grad}" onclick="openExSections('${k}')"><div><h3>${ex.name}</h3><p style="font-size:11px; opacity:0.8;">${ex.desc}</p></div><div style="margin-left:auto;">→</div></div>`;
                 }
             });
-            syncBroadcast();
         }
 
         function openExSections(id) {
             db.ref('exams/'+id).once('value', s => {
-                const ex = s.val();
+                const ex = s.val() || defaultExams[id];
                 document.getElementById('view-sections').classList.remove('hidden');
                 let sArr = ex.sections.split(',');
-                let grad = ex.name.includes('UPSC') ? 'var(--upsc)' : 'var(--ssc)';
-                let html = `<div class="s-header" style="background:${grad}"><h1>${ex.name}</h1><p>${ex.desc}</p></div><h3 style="margin:0 0 15px 10px; opacity:0.6;">EXAM STAGES</h3>`;
+                let html = `<div style="padding:40px 20px; background:var(--ssc); border-radius:25px; margin-bottom:20px;"><h1>${ex.name}</h1><p>${ex.desc}</p></div>`;
                 sArr.forEach((v, i) => {
-                    html += `<div class="s-item"><div class="s-num">${i+1}</div><h3>${v.trim()}</h3><div style="margin-left:auto; color:var(--accent);">→</div></div>`;
+                    html += `<div style="background:var(--card); padding:20px; border-radius:18px; margin-bottom:12px; display:flex; align-items:center; gap:15px;"><div style="color:var(--accent); font-weight:bold;">${i+1}</div><h3>${v.trim()}</h3></div>`;
                 });
                 document.getElementById('sections-render').innerHTML = html;
             });
@@ -222,7 +177,7 @@
             const s = document.getElementById('in-ex-secs').value;
             if(!n) return;
             db.ref('exams/'+n).set({name:n, desc:d, sections:s}).then(()=> { 
-                showToast("Exam Database Updated!");
+                showToast("Updated Successfully!");
                 document.getElementById('in-ex-name').value=''; 
                 document.getElementById('in-ex-desc').value=''; 
                 document.getElementById('in-ex-secs').value='';
@@ -232,47 +187,36 @@
         function loadAdminTools() {
             db.ref('exams').on('value', s => {
                 const list = document.getElementById('adm-exams-list');
-                list.innerHTML = '<h4 style="margin:20px 0 10px 0;">Existing Categories:</h4>';
-                s.forEach(c => {
-                    list.innerHTML += `<div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;"><span>${c.val().name}</span> <button onclick="db.ref('exams/${c.key}').remove()" style="color:red; background:none; border:none; cursor:pointer; font-weight:bold;">DELETE</button></div>`;
-                });
+                list.innerHTML = '<h4>Existing Exams:</h4>';
+                const data = s.val() || defaultExams;
+                for(let k in data) {
+                    list.innerHTML += `<div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>${data[k].name}</span>
+                        <div>
+                            <button onclick="editExam('${k}')" style="color:var(--accent); background:none; border:none; font-weight:bold; margin-right:15px; cursor:pointer;">EDIT</button>
+                            <button onclick="db.ref('exams/${k}').remove()" style="color:red; background:none; border:none; font-weight:bold; cursor:pointer;">DELETE</button>
+                        </div>
+                    </div>`;
+                }
             });
             db.ref('attendance').on('value', s => {
-                let h = '<h4>Lifetime Student Logs:</h4><br>';
+                let h = '<h4>Student Logs:</h4>';
                 s.forEach(u => {
-                    h += `<b style="color:var(--accent)">${u.key.replace(/_/g,' ')}:</b><br>`;
-                    u.forEach(l => { h += `<span style="opacity:0.6;">• ${l.val().time}</span><br>`; });
-                    h += '<hr style="opacity:0.05; margin:10px 0;">';
+                    h += `<br><b>${u.key}:</b><br>`;
+                    u.forEach(l => { h += `• ${l.val().time}<br>`; });
                 });
                 document.getElementById('history-logs').innerHTML = h;
             });
         }
 
-        function adminPublishMedia() {
-            const t = document.getElementById('in-v-title').value;
-            const i = document.getElementById('in-v-id').value;
-            const p = document.getElementById('in-pdf').value;
-            db.ref('live').update({title:t, vid:i, pdf:p}).then(()=>showToast("Material is now LIVE!"));
-        }
-
-        function dbWrite(path, val) { db.ref(path).set(val).then(()=>showToast("Success!")); }
-
-        function syncBroadcast() {
-            db.ref('live').on('value', s => {
-                const d = s.val(); if(!d) return;
-                if(d.ticker) document.getElementById('app-ticker').innerText = d.ticker;
-                let h = '';
-                if(d.vid) h += `<h3>Latest Special Class</h3><div class="card" style="padding:10px; margin-top:10px;"><h4>${d.title}</h4><iframe width="100%" height="210" src="https://www.youtube.com/embed/${d.vid}" frameborder="0" allowfullscreen style="border-radius:18px; margin-top:10px; border:none;"></iframe></div>`;
-                if(d.pdf) h += `<div class="card" style="background:var(--accent); text-align:center; padding:15px;"><a href="${d.pdf}" target="_blank" style="color:white; text-decoration:none; font-weight:bold; letter-spacing:1px;">📄 DOWNLOAD PDF NOTES</a></div>`;
-                document.getElementById('broadcast-render').innerHTML = h;
+        function editExam(id) {
+            db.ref('exams/'+id).once('value', s => {
+                const ex = s.val() || defaultExams[id];
+                document.getElementById('in-ex-name').value = ex.name;
+                document.getElementById('in-ex-desc').value = ex.desc;
+                document.getElementById('in-ex-secs').value = ex.sections;
+                showToast("Data loaded for Editing");
             });
-        }
-
-        function switchTab(id) {
-            document.querySelectorAll('.adm-content').forEach(p => p.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
         }
 
         function doLogout() { localStorage.removeItem('activeSession'); location.reload(); }
