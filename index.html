@@ -3,84 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Selection - Pro Academy</title>
+    <title>Study Selection Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 🚫 ENTERPRISE AD BLOCKER (Deep Clean) */
-        iframe, ins, script[src*="appsgeyser"], .appgeyser-ad-unit, [id*="ads"], [class*="ads"],
-        div[style*="z-index: 2147483647"], #p_527038, [id*="advert"] { 
-            display: none !important; opacity: 0 !important; visibility: hidden !important; 
-            pointer-events: none !important; height: 0 !important; width: 0 !important;
-            position: fixed !important; left: -5000px !important;
+        /* 🚫 THE ULTIMATE AD-VANISHER (Aggressive) */
+        iframe, ins, .appgeyser-ad-unit, [id*="ads"], [class*="ads"], 
+        div[style*="z-index: 2147483647"], div[id*="p_"], a[href*="appsgeyser"] {
+            display: none !important;
+            height: 0 !important;
+            width: 0 !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            position: absolute !important;
+            top: -5000px !important;
+            pointer-events: none !important;
         }
 
-        :root { --primary: #002e6e; --secondary: #f97316; --bg: #f4f7fa; --text: #1a1a1a; --card-bg: #ffffff; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+        :root { --primary: #002e6e; --secondary: #f97316; --bg: #f0f4f8; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: #333; overflow-x: hidden; height: 100vh; }
+        
+        .header { background: var(--primary); color: white; padding: 30px 20px; border-radius: 0 0 25px 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .card { background: white; padding: 18px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        
+        /* Professional Exam List Style */
+        .exam-item { 
+            background: white; padding: 20px; border-radius: 15px; margin-bottom: 12px; 
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 6px solid var(--secondary); cursor: pointer; font-weight: 600;
+            transition: 0.2s;
+        }
+        .exam-item:active { background: #e8eef3; transform: scale(0.98); }
+
+        .btn-p { background: var(--secondary); color: white; padding: 16px; border-radius: 12px; border: none; width: 100%; font-weight: 700; font-size: 16px; cursor: pointer; }
+        .input-d { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #ddd; margin-bottom: 15px; outline: none; }
+        
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 99999; }
         .hidden { display: none !important; }
-        
-        /* Professional UI Components */
-        .header { background: var(--primary); color: white; padding: 25px 20px; border-radius: 0 0 30px 30px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .card { background: var(--card-bg); padding: 18px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eef2f6; }
-        .exam-card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 5px solid var(--primary); cursor: pointer; transition: 0.2s; }
-        .exam-card:active { background: #f0f4f8; }
-        
-        .btn-main { background: var(--secondary); color: white; padding: 15px; border-radius: 10px; border: none; width: 100%; font-weight: 700; cursor: pointer; font-size: 16px; }
-        .input-field { width: 100%; padding: 14px; background: #fff; border: 1.5px solid #ddd; border-radius: 10px; margin-bottom: 15px; outline: none; font-size: 15px; }
-        
-        nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: #fff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; z-index: 1000; }
-        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; padding-bottom: 80px; }
+        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 10000; overflow-y: auto; padding: 20px; padding-bottom: 90px; }
     </style>
 </head>
 <body>
 
-    <div id="view-login" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: #002e6e;">
-        <div class="card" style="width: 100%; max-width: 380px; text-align: center; padding: 40px 25px;">
-            <h1 style="color:var(--primary); font-size: 28px; margin-bottom: 10px;">PRO ACADEMY</h1>
-            <p style="color:#666; margin-bottom: 30px;">Login to start learning</p>
-            <input type="text" id="user-name" class="input-field" placeholder="Enter Your Name">
-            <button onclick="handleLogin()" class="btn-main">CONTINUE</button>
+    <div id="view-login" style="height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--primary);">
+        <div class="card" style="width: 100%; max-width: 380px; text-align: center; padding: 40px 20px;">
+            <h1 style="color:var(--primary); margin-bottom: 10px;">STUDY SELECTION</h1>
+            <p style="color:#666; margin-bottom: 30px;">Login to Your Classroom</p>
+            <input type="text" id="user-name" class="input-d" placeholder="Student Name">
+            <button onclick="handleLogin()" class="btn-p">LOGIN NOW</button>
         </div>
     </div>
 
     <div id="view-student" class="hidden">
         <div class="header">
-            <p style="font-size: 14px; opacity: 0.8;">Namaste,</p>
-            <h2 id="display-name" style="font-size: 22px;">Student</h2>
+            <p style="font-size: 14px; opacity: 0.8;">Welcome Back,</p>
+            <h2 id="display-name">Student</h2>
         </div>
-        <div style="padding: 0 20px;">
-            <h4 style="margin-bottom: 15px; color: #444;">Select Your Course</h4>
-            <div id="exam-list"></div>
+        <div style="padding: 20px;">
+            <h4 style="margin-bottom: 15px; color: #555;">Select Your Course</h4>
+            <div id="exam-render">
+                </div>
         </div>
         <nav>
-            <div onclick="location.reload()" style="text-align:center; color:var(--primary); font-weight:bold;">🏠<br><small>Home</small></div>
-            <div onclick="doLogout()" style="text-align:center; color:#888;">👤<br><small>Logout</small></div>
+            <div onclick="location.reload()" style="text-align:center; color:var(--primary); font-weight:bold; cursor:pointer;">🏠<br>Home</div>
+            <div onclick="doLogout()" style="text-align:center; color:#888; cursor:pointer;">👤<br>Logout</div>
         </nav>
     </div>
 
     <div id="view-admin" class="hidden" style="padding: 20px;">
-        <div class="header" style="border-radius: 15px; padding: 20px;">
-            <h2>Admin Control Panel</h2>
-            <button onclick="doLogout()" style="background:none; border:none; color:white; font-weight:bold;">Logout</button>
+        <div class="header" style="border-radius: 15px; padding: 15px; display:flex; justify-content:space-between; align-items:center;">
+            <h3>Admin Panel</h3>
+            <button onclick="doLogout()" style="color:white; background:none; border:none; font-weight:bold;">EXIT</button>
         </div>
-        <div class="card">
-            <h4>Add/Edit Exam</h4>
-            <input type="text" id="in-name" class="input-field" placeholder="Exam Name (e.g. CGL)">
-            <input type="text" id="in-parent" class="input-field" placeholder="Parent (e.g. SSC) - Main ke liye khali chode">
-            <input type="text" id="in-secs" class="input-field" placeholder="Sections (Tier 1, Tier 2)">
-            <button onclick="adminSave()" class="btn-main">SAVE DATA</button>
+        <div class="card" style="margin-top:20px;">
+            <h4>Manage Exams Tree</h4>
+            <input type="text" id="in-name" class="input-d" placeholder="Name (e.g. CGL)">
+            <input type="text" id="in-parent" class="input-d" placeholder="Parent (e.g. SSC) - Main ke liye khali">
+            <input type="text" id="in-secs" class="input-d" placeholder="Stages (Tier 1, Tier 2)">
+            <button onclick="adminSave()" class="btn-p">SAVE & SYNC</button>
         </div>
         <div id="adm-list"></div>
         <div class="card">
-            <h4>Live User Logs</h4>
-            <div id="adm-logs" style="font-size: 12px; color: #555; max-height: 200px; overflow-y: auto;"></div>
+            <h4>Live Students Activity</h4>
+            <div id="adm-logs" style="font-size: 12px; color: #555;"></div>
         </div>
     </div>
 
     <div id="view-sub" class="hidden full-page">
-        <div onclick="this.parentElement.classList.add('hidden')" style="color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;">← Back</div>
+        <div onclick="this.parentElement.classList.add('hidden')" style="color:var(--primary); font-weight:bold; cursor:pointer; margin-bottom:15px;">← BACK</div>
         <h2 id="sub-title" style="margin-bottom:20px; color:var(--primary);"></h2>
         <div id="sub-render"></div>
     </div>
@@ -98,23 +110,28 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 🛡️ AD-KILLER ENGINE
+        // 🛡️ AD-SHIELD ENGINE (Non-Stop Cleaning)
         setInterval(() => {
-            document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, [id*="ads"]').forEach(el => el.remove());
-        }, 100);
+            const elements = document.querySelectorAll('iframe, ins, .appgeyser-ad-unit, [id*="ads"], div[style*="fixed"]');
+            elements.forEach(el => {
+                if(!el.id.includes('view-') && !el.classList.contains('full-page')) {
+                    el.remove();
+                }
+            });
+        }, 50);
 
         function handleLogin() {
             const name = document.getElementById('user-name').value.trim();
             if(!name) return;
             if(name.toLowerCase() !== 'admin123') {
-                db.ref('pro_logs/' + name.replace(/\s/g,'_')).push({ time: new Date().toLocaleString() });
+                db.ref('attendance/' + name.replace(/\s/g,'_')).push({ time: new Date().toLocaleString() });
             }
-            localStorage.setItem('proUser', name);
+            localStorage.setItem('currentUser', name);
             location.reload();
         }
 
         window.onload = () => {
-            const user = localStorage.getItem('proUser');
+            const user = localStorage.getItem('currentUser');
             if(!user) return;
             document.getElementById('view-login').classList.add('hidden');
             if(user.toLowerCase() === 'admin123') {
@@ -123,18 +140,18 @@
             } else {
                 document.getElementById('view-student').classList.remove('hidden');
                 document.getElementById('display-name').innerText = user;
-                loadStudent();
+                loadStudentExams();
             }
         };
 
-        function loadStudent() {
+        function loadStudentExams() {
             db.ref('exams').on('value', s => {
-                const data = s.val() || {"SSC": {name:"SSC", parent:""}, "UPSC": {name:"UPSC", parent:""}};
-                const container = document.getElementById('exam-list');
+                const data = s.val() || { "SSC": {name:"SSC"}, "UPSC": {name:"UPSC"} };
+                const container = document.getElementById('exam-render');
                 container.innerHTML = '';
                 for(let k in data) {
                     if(!data[k].parent) {
-                        container.innerHTML += `<div class="exam-card" onclick="openLevel('${k}')"><span><b>${data[k].name}</b></span> <span>➔</span></div>`;
+                        container.innerHTML += `<div class="exam-item" onclick="openLevel('${k}')"><span>${data[k].name}</span> <span>➔</span></div>`;
                     }
                 }
             });
@@ -150,12 +167,12 @@
                 
                 for(let k in all) {
                     if(all[k].parent === all[id].name) {
-                        render.innerHTML += `<div class="exam-card" style="border-left-color:var(--secondary)" onclick="openLevel('${k}')"><b>${all[k].name}</b></div>`;
+                        render.innerHTML += `<div class="exam-item" style="border-left-color:var(--primary)" onclick="openLevel('${k}')">${all[k].name}</div>`;
                     }
                 }
                 if(all[id].secs) {
                     all[id].secs.split(',').forEach(sec => {
-                        render.innerHTML += `<div class="card">📌 ${sec.trim()}</div>`;
+                        render.innerHTML += `<div class="card">📄 ${sec.trim()}</div>`;
                     });
                 }
             });
@@ -166,31 +183,32 @@
             const p = document.getElementById('in-parent').value;
             const s = document.getElementById('in-secs').value;
             if(!n) return;
-            db.ref('exams/'+n).update({name:n, parent:p, secs:s}).then(() => location.reload());
+            db.ref('exams/'+n).update({name:n, parent:p, secs:s}).then(() => {
+                alert("Updated!"); location.reload();
+            });
         }
 
         function loadAdmin() {
             db.ref('exams').on('value', s => {
                 const list = document.getElementById('adm-list');
-                list.innerHTML = '<h4>Existing Courses:</h4>';
+                list.innerHTML = '<h4>Existing Exams:</h4>';
                 s.forEach(c => {
                     list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;">
                         <span>${c.val().name}</span>
                         <div>
-                            <button onclick="editExam('${c.key}')" style="color:var(--secondary); background:none; border:none; margin-right:10px; font-weight:bold;">Edit</button>
-                            <button onclick="db.ref('exams/${c.key}').remove()" style="color:red; background:none; border:none;">Del</button>
+                            <button onclick="editExam('${c.key}')" style="color:var(--secondary); background:none; border:none; margin-right:10px; font-weight:bold;">EDIT</button>
+                            <button onclick="db.ref('exams/${c.key}').remove()" style="color:red; background:none; border:none; font-weight:bold;">DEL</button>
                         </div>
                     </div>`;
                 });
             });
-            db.ref('pro_logs').on('value', s => {
+            db.ref('attendance').on('value', s => {
                 let h = '';
                 s.forEach(u => {
                     h += `<b>${u.key}:</b><br>`;
                     u.forEach(l => { h += `• ${l.val().time}<br>`; });
-                    h += '<hr style="margin:5px 0; opacity:0.2">';
                 });
-                document.getElementById('adm-logs').innerHTML = h || "No user data.";
+                document.getElementById('adm-logs').innerHTML = h || "No data.";
             });
         }
 
@@ -204,7 +222,7 @@
             });
         }
 
-        function doLogout() { localStorage.removeItem('proUser'); location.reload(); }
+        function doLogout() { localStorage.removeItem('currentUser'); location.reload(); }
     </script>
 </body>
 </html>
