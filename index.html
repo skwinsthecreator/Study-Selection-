@@ -3,123 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vidyagram Clone - Admin & Student</title>
+    <title>Selection Will - Official App</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --v-blue: #1a237e; --v-light-blue: #283593; --v-orange: #ff6f00; --v-bg: #f5f7fa; --v-card: #ffffff; --v-text: #212121; }
-        .dark-mode { --v-bg: #0a0e17; --v-card: #161b26; --v-text: #ffffff; }
+        /* 🚫 NO ADS */
+        iframe, ins, .appgeyser-ad-unit { display: none !important; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-        body { background: var(--v-bg); color: var(--v-text); -webkit-tap-highlight-color: transparent; }
+        :root { --sw-blue: #0052cc; --sw-light-blue: #ebf2ff; --sw-bg: #f4f7fa; --sw-text: #172b4d; --sw-white: #ffffff; }
+        .dark-theme { --sw-bg: #0a0e17; --sw-text: #ffffff; --sw-white: #161b26; --sw-light-blue: #1e293b; }
 
-        /* 🔑 AUTH SCREEN */
-        #auth-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 30px; background: var(--v-blue); color: white; text-align: center; }
-        .login-input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: none; outline: none; font-size: 16px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.2s; }
+        body { background: var(--sw-bg); color: var(--sw-text); }
 
-        /* 📱 VIDYAGRAM STYLE HEADER */
-        .v-header { background: var(--v-blue); padding: 30px 20px 60px 20px; color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; position: relative; }
-        .v-header h2 { font-weight: 500; font-size: 18px; opacity: 0.9; }
-        .v-header h1 { font-size: 24px; margin-top: 5px; }
-
-        /* 📊 STATS BOX (Floating) */
-        .v-stats { display: flex; justify-content: space-around; background: var(--v-card); margin: -40px 20px 20px 20px; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .stat-item { text-align: center; }
-        .stat-item h4 { color: var(--v-orange); font-size: 20px; }
-        .stat-item p { font-size: 11px; color: #757575; font-weight: 500; }
-
-        /* 📚 COURSE LIST */
-        .section-title { padding: 0 20px; margin: 10px 0; font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
-        .course-card { background: var(--v-card); margin: 0 20px 15px 20px; padding: 15px; border-radius: 12px; display: flex; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid rgba(0,0,0,0.03); }
-        .course-icon { width: 50px; height: 50px; background: #e8eaf6; border-radius: 10px; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: var(--v-blue); font-weight: 700; }
-        .course-info h3 { font-size: 16px; margin-bottom: 2px; }
-        .course-info p { font-size: 12px; color: #757575; }
-
-        /* 🧭 BOTTOM NAV (Vidyagram Layout) */
-        .v-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--v-card); display: none; justify-content: space-around; align-items: center; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-link { text-align: center; color: #9e9e9e; font-size: 11px; text-decoration: none; cursor: pointer; }
-        .nav-link.active { color: var(--v-blue); font-weight: 700; }
-
-        /* 🛠️ ADMIN DASHBOARD */
-        .admin-box { background: #fff; color: #000; margin: 20px; padding: 20px; border-radius: 15px; border: 2px dashed #ccc; }
-        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; }
-
-        .page { display: none; padding-bottom: 90px; }
-        .active-page { display: block; }
+        /* 🔑 LOGIN SCREEN */
+        #auth-screen { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 30px; background: var(--sw-blue); text-align: center; color: white; }
+        .auth-input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 12px; border: none; font-size: 16px; outline: none; }
         
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--v-bg); z-index: 2000; display: none; padding: 20px; overflow-y: auto; }
-        .v-btn { background: var(--v-orange); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        /* 📱 HEADER & BANNER */
+        .sw-header { background: var(--sw-blue); padding: 30px 20px 20px 20px; color: white; border-radius: 0 0 25px 25px; }
+        .sw-banner { background: #ffab00; margin: -10px 20px 20px 20px; padding: 15px; border-radius: 15px; color: #000; font-weight: 700; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* 🗂️ CATEGORY GRID (Selection Will Style) */
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; padding: 20px; }
+        .cat-item { text-align: center; cursor: pointer; }
+        .cat-icon { background: var(--sw-white); width: 60px; height: 60px; border-radius: 15px; margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .cat-item p { font-size: 10px; font-weight: 600; color: var(--sw-text); }
+
+        /* 📋 BATCH LIST */
+        .batch-card { background: var(--sw-white); margin: 0 20px 15px 20px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.02); }
+        .batch-img { width: 100%; height: 140px; background: #ddd; position: relative; display: flex; align-items: center; justify-content: center; color: #666; font-weight: 700; }
+        .batch-info { padding: 15px; }
+        .batch-title { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+        .batch-tags { display: flex; gap: 8px; margin-top: 10px; }
+        .tag { font-size: 10px; background: var(--sw-light-blue); color: var(--sw-blue); padding: 4px 10px; border-radius: 5px; font-weight: 700; }
+
+        /* 🧭 NAVIGATION */
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--sw-white); display: none; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; }
+        .nav-link { text-align: center; color: #7a869a; font-size: 11px; cursor: pointer; }
+        .nav-link.active { color: var(--sw-blue); font-weight: 700; }
+
+        /* 👤 PROFILE (Selection Will Style) */
+        .prof-row { display: flex; align-items: center; padding: 20px; background: var(--sw-white); margin: 20px; border-radius: 20px; }
+
+        /* 🛠️ ADMIN CONTROL */
+        .admin-panel { background: #fff; color: #000; margin: 20px; padding: 25px; border-radius: 20px; border: 2px solid var(--sw-blue); }
+        .admin-btn { width: 100%; padding: 14px; margin-top: 10px; border: none; border-radius: 10px; color: white; font-weight: 700; }
+
+        .page { display: none; padding-bottom: 100px; }
+        .active-page { display: block; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--sw-bg); z-index: 2000; display: none; padding: 20px; overflow-y: auto; }
     </style>
 </head>
-<body>
+<body class="light-theme">
 
     <div id="auth-screen">
-        <h1 style="margin-bottom: 10px;">Vidyagram</h1>
-        <p style="opacity: 0.8; margin-bottom: 40px;">Learning is Future</p>
-        <input type="text" id="user-id" class="login-input" placeholder="Name / Admin ID">
-        <button onclick="login()" class="v-btn" style="width: 100%; margin-top: 10px;">GET STARTED</button>
-        <p onclick="toggleTheme()" style="margin-top: 30px; font-size: 12px; cursor: pointer;">🌓 Switch Theme</p>
+        <h1 style="margin-bottom: 5px;">Selection Will</h1>
+        <p style="opacity: 0.8; margin-bottom: 40px;">Apka Selection, Hamari Pehchan</p>
+        <input type="text" id="login-id" class="auth-input" placeholder="Phone Number / Admin ID">
+        <button onclick="login()" style="width:100%; padding:18px; border-radius:12px; border:none; background:#ffab00; color:#000; font-weight:700;">LOGIN ➔</button>
+        <p onclick="toggleTheme()" style="margin-top: 25px; font-size: 12px; cursor: pointer;">🌓 Switch Dark/Light Mode</p>
     </div>
 
     <div id="page-home" class="page">
-        <div class="v-header">
-            <h2>Welcome to Vidyagram,</h2>
-            <h1 id="user-name">Student</h1>
+        <div class="sw-header">
+            <div style="display:flex; justify-content:space-between;">
+                <div><p style="font-size:12px; opacity:0.8;">Hello,</p><h2 id="u-name-top">Student</h2></div>
+                <div style="font-size:24px;">🔔</div>
+            </div>
         </div>
-        <div class="v-stats">
-            <div class="stat-item"><h4>15</h4><p>COURSES</p></div>
-            <div class="stat-item"><h4>85</h4><p>PDFs</p></div>
-            <div class="stat-item"><h4>LIVE</h4><p>SESSIONS</p></div>
+        <div class="sw-banner">🚀 New Constitution Series Live Now!</div>
+        
+        <div class="cat-grid">
+            <div class="cat-item" onclick="openHierarchy('SSC')"><div class="cat-icon">🏆</div><p>SSC</p></div>
+            <div class="cat-item" onclick="openHierarchy('UPSC')"><div class="cat-icon">📜</div><p>UPSC</p></div>
+            <div class="cat-item" onclick="openHierarchy('Railway')"><div class="cat-icon">🚂</div><p>Railway</p></div>
+            <div class="cat-item" onclick="openHierarchy('Teaching')"><div class="cat-icon">👨‍🏫</div><p>Teaching</p></div>
+            <div class="cat-item" onclick="openHierarchy('Banking')"><div class="cat-icon">🏦</div><p>Banking</p></div>
+            <div class="cat-item" onclick="openHierarchy('State')"><div class="cat-icon">🏛️</div><p>State PC</p></div>
+            <div class="cat-item" onclick="openHierarchy('Defense')"><div class="cat-icon">🎖️</div><p>Defense</p></div>
+            <div class="cat-item" onclick="openHierarchy('Others')"><div class="cat-icon">➕</div><p>Others</p></div>
         </div>
-        <div class="section-title">All Exam Categories <span style="font-size: 12px; color: var(--v-orange);">View All</span></div>
-        <div id="course-list"></div>
+
+        <div style="padding:0 20px 15px 20px;"><h3>Live Batches</h3></div>
+        <div id="batch-container"></div>
     </div>
 
-    <div id="page-library" class="page">
-        <div class="v-header" style="padding-bottom: 30px;"><h1>E-Library</h1></div>
-        <div id="lib-content" style="padding: 20px; text-align: center; color: #999;">Books and Magazines will appear here.</div>
-    </div>
-
-    <div id="page-downloads" class="page">
-        <div class="v-header" style="padding-bottom: 30px;"><h1>My Downloads</h1></div>
-        <div style="padding: 40px; text-align: center; color: #999;">No offline videos yet.</div>
-    </div>
+    <div id="page-library" class="page" style="padding:20px;"><h2>Study Material</h2><p>PDFs will appear here.</p></div>
+    <div id="page-downloads" class="page" style="padding:20px;"><h2>My Downloads</h2><p>Saved videos.</p></div>
 
     <div id="page-profile" class="page">
-        <div class="v-header" style="padding-bottom: 30px;"><h1>Account</h1></div>
-        <div style="background: var(--v-card); margin: 20px; padding: 20px; border-radius: 15px;">
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <div id="u-icon" style="width: 60px; height: 60px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">U</div>
-                <div style="margin-left: 15px;"><h3 id="u-name-f">Name</h3><p style="font-size: 12px; color: gray;">Student ID: #8892</p></div>
-            </div>
-            <input type="text" id="prof-phone" class="login-input" style="background: #f0f0f0; color: black;" placeholder="Update Phone Number">
-            <input type="text" id="prof-email" class="login-input" style="background: #f0f0f0; color: black;" placeholder="Update Email">
-            <button onclick="saveProf()" class="v-btn" style="width: 100%; margin-top: 10px;">SAVE DATA</button>
-            <button onclick="logout()" style="background: #e53935; width: 100%; margin-top: 10px;" class="v-btn">LOGOUT</button>
+        <div class="sw-header" style="height:120px;"><h2>My Profile</h2></div>
+        <div class="prof-row">
+            <div id="u-char" style="width:60px; height:60px; background:var(--sw-blue); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px;">S</div>
+            <div style="margin-left:15px;"><h3 id="u-name-full">Student Name</h3><p style="font-size:12px; color:gray;">Active Subscription</p></div>
+        </div>
+        <div style="padding:20px;">
+            <input type="text" id="p-phone" class="auth-input" style="background:var(--sw-white); border:1px solid #ddd; color:var(--sw-text);" placeholder="Phone Number">
+            <input type="text" id="p-email" class="auth-input" style="background:var(--sw-white); border:1px solid #ddd; color:var(--sw-text);" placeholder="Email Address">
+            <button onclick="saveProfile()" style="background:var(--sw-blue); color:white;" class="admin-btn">UPDATE PROFILE</button>
+            <button onclick="logout()" style="background:none; color:red; border:1px solid red; margin-top:10px;" class="admin-btn">LOGOUT</button>
         </div>
     </div>
 
     <div id="page-admin" class="page">
-        <div class="v-header" style="padding-bottom: 30px;"><h1>Admin Control</h1></div>
-        <div class="admin-box">
-            <h3>Add New Curriculum</h3><br>
-            <input type="text" id="ad-ex-name" class="admin-input" placeholder="Exam Title (e.g. SSC CGL)">
-            <input type="text" id="ad-ex-cat" class="admin-input" placeholder="Main Category (e.g. SSC)">
-            <button onclick="adminAdd()" class="v-btn" style="background: green;">PUBLISH LIVE</button>
-            <hr style="margin: 20px 0;">
-            <p style="font-size: 12px;">Existing Exams: <span id="ex-count">0</span></p>
-            <div id="admin-view-list"></div>
+        <div class="sw-header"><h2>Admin Dashboard</h2></div>
+        <div class="admin-panel">
+            <input type="text" id="ad-title" class="auth-input" style="border:1px solid #ddd;" placeholder="Exam/Batch Name">
+            <input type="text" id="ad-cat" class="auth-input" style="border:1px solid #ddd;" placeholder="Category (SSC, UPSC etc)">
+            <button onclick="addExam()" style="background:green;" class="admin-btn">ADD & PUBLISH</button>
+            <button style="background:var(--sw-blue);" class="admin-btn">SEND NOTIFICATION</button>
         </div>
     </div>
 
-    <div id="sub-overlay" class="overlay">
-        <div onclick="this.parentElement.style.display='none'" style="font-size: 20px; margin-bottom: 20px; color: var(--v-blue);">← Back to Home</div>
-        <h1 id="sub-title">SSC CGL</h1>
-        <div id="sub-list" style="margin-top: 20px;"></div>
+    <div id="sw-overlay" class="overlay">
+        <div onclick="this.parentElement.style.display='none'" style="cursor:pointer; color:var(--sw-blue); font-weight:700;">← BACK</div>
+        <h1 id="over-title" style="margin-top:20px;">Category</h1>
+        <div id="over-content" style="margin-top:20px;"></div>
     </div>
 
-    <nav id="v-nav-bar">
+    <nav id="sw-nav-bar">
         <div class="nav-link active" onclick="nav('home')">🏠<br>Home</div>
         <div class="nav-link" onclick="nav('library')">📚<br>Library</div>
         <div class="nav-link" onclick="nav('downloads')">📥<br>Downloads</div>
@@ -127,67 +131,84 @@
     </nav>
 
     <script>
-        // 1. Firebase Logic
         const firebaseConfig = { apiKey: "...", databaseURL: "https://study-selection-default-rtdb.firebaseio.com" }; 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. Initial Setup Data
-        let exams = [
-            { name: "SSC", sub: ["CGL", "CHSL", "CPO", "MTS", "GD"] },
-            { name: "UPSC", sub: ["Civil Services", "CDS", "NDA"] },
-            { name: "Railway", sub: ["NTPC", "Group D", "ALP"] },
-            { name: "Teaching", sub: ["CTET", "UPTET", "Super TET"] },
-            { name: "Defence", sub: ["Army", "Airforce", "Navy"] }
-        ];
+        // Exam Structures
+        const hierarchy = {
+            "SSC": ["CGL", "CHSL", "CPO", "MTS", "GD"],
+            "UPSC": ["Civil Services", "NDA", "CDS"],
+            "Railway": ["NTPC", "Group D", "ALP"]
+        };
+
+        const subLevels = {
+            "CGL": ["Prelims", "Mains"],
+            "CHSL": ["Tier 1", "Tier 2"]
+        };
 
         function login() {
-            const u = document.getElementById('user-id').value;
-            if(!u) return alert("Please enter name");
-            localStorage.setItem('v_user', u);
+            const u = document.getElementById('login-id').value;
+            if(!u) return alert("Enter Details");
+            localStorage.setItem('sw_user', u);
             location.reload();
         }
 
         window.onload = () => {
-            const u = localStorage.getItem('v_user');
+            const u = localStorage.getItem('sw_user');
             if(u) {
                 document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('v-nav-bar').style.display = 'flex';
-                document.getElementById('user-name').innerText = u;
-                document.getElementById('u-name-f').innerText = u;
-                document.getElementById('u-icon').innerText = u[0].toUpperCase();
+                document.getElementById('sw-nav-bar').style.display = 'flex';
+                document.getElementById('u-name-top').innerText = u;
+                document.getElementById('u-name-full').innerText = u;
+                document.getElementById('u-char').innerText = u[0].toUpperCase();
                 
                 if(u.toLowerCase() === 'admin123') nav('admin');
                 else nav('home');
                 
-                renderVidyagram();
+                renderBatches();
             }
         };
 
-        function renderVidyagram() {
-            const cont = document.getElementById('course-list');
-            cont.innerHTML = exams.map(ex => `
-                <div class="course-card" onclick="openHierarchy('${ex.name}')">
-                    <div class="course-icon">${ex.name[0]}</div>
-                    <div class="course-info"><h3>${ex.name} Exams</h3><p>${ex.sub.length} Categories available</p></div>
+        function renderBatches() {
+            const cont = document.getElementById('batch-container');
+            cont.innerHTML = ["Maths Special", "English Special", "Reasoning Foundation"].map(b => `
+                <div class="batch-card">
+                    <div class="batch-img">${b} Banner</div>
+                    <div class="batch-info">
+                        <div class="batch-title">${b} 2026</div>
+                        <p style="font-size:12px; color:gray;">By Selection Will Team</p>
+                        <div class="batch-tags"><span class="tag">LIVE</span><span class="tag">HINDI/ENG</span></div>
+                    </div>
                 </div>
             `).join('');
-            document.getElementById('ex-count').innerText = exams.length;
         }
 
         function openHierarchy(name) {
-            const ov = document.getElementById('sub-overlay');
-            const list = document.getElementById('sub-list');
-            document.getElementById('sub-title').innerText = name;
+            const ov = document.getElementById('sw-overlay');
+            const cont = document.getElementById('over-content');
+            document.getElementById('over-title').innerText = name + " Exams";
             
-            const ex = exams.find(e => e.name === name);
-            list.innerHTML = ex.sub.map(s => `
-                <div class="course-card" style="margin: 0 0 10px 0; border-left: 5px solid var(--v-orange);">
-                    <div class="course-info"><h3>${s}</h3><p>Prelims, Mains & More</p></div>
-                    <div style="margin-left: auto; color: var(--v-blue);">➔</div>
+            if(!hierarchy[name]) return alert("Opening " + name);
+            
+            cont.innerHTML = hierarchy[name].map(s => `
+                <div class="batch-card" style="margin:0 0 10px 0; padding:15px;" onclick="openSub('${s}')">
+                    <strong>${s}</strong>
+                    <span style="float:right; color:var(--sw-blue);">➔</span>
                 </div>
             `).join('');
             ov.style.display = 'block';
+        }
+
+        function openSub(s) {
+            if(!subLevels[s]) return alert("No Sub-levels for " + s);
+            const cont = document.getElementById('over-content');
+            document.getElementById('over-title').innerText = s + " Stages";
+            cont.innerHTML = subLevels[s].map(lvl => `
+                <div class="batch-card" style="margin:0 0 10px 0; padding:15px; border-left:5px solid #ffab00;">
+                    <strong>${lvl}</strong>
+                </div>
+            `).join('');
         }
 
         function nav(id) {
@@ -197,16 +218,8 @@
             event.currentTarget?.classList?.add('active');
         }
 
-        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+        function toggleTheme() { document.body.classList.toggle('dark-theme'); }
         function logout() { localStorage.clear(); location.reload(); }
-
-        function saveProf() {
-            const u = localStorage.getItem('v_user');
-            const p = document.getElementById('prof-phone').value;
-            const e = document.getElementById('prof-email').value;
-            db.ref('users/' + u).update({ phone: p, email: e });
-            alert("Vidyagram Profile Updated!");
-        }
     </script>
 </body>
 </html>
